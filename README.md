@@ -8,16 +8,16 @@ This application provides a paper-trading environment where users can browse Vie
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Backend | Laravel 11 (PHP 8.2+) |
-| Frontend | React 18 + TypeScript |
-| Bridge | Inertia.js v2 |
-| Build | Vite |
-| Styling | TailwindCSS 3 + shadcn/ui |
-| Database | MySQL 8 |
-| Charts | Recharts |
-| Auth | Laravel Breeze |
+| Layer    | Technology                |
+| -------- | ------------------------- |
+| Backend  | Laravel 11 (PHP 8.2+)     |
+| Frontend | React 18 + TypeScript     |
+| Bridge   | Inertia.js v2             |
+| Build    | Vite                      |
+| Styling  | TailwindCSS 3 + shadcn/ui |
+| Database | MySQL 8                   |
+| Charts   | Recharts                  |
+| Auth     | Laravel Breeze            |
 
 ## Prerequisites
 
@@ -105,14 +105,14 @@ Visit <http://localhost:8000>
 
 After seeding, the following accounts are available:
 
-| Role | Email | Password | Balance |
-|------|-------|----------|---------|
-| Administrator | <admin@uit.edu.vn> | password | — |
-| User | <user1@uit.edu.vn> | password | 100,000,000 ₫ |
-| User | <user2@uit.edu.vn> | password | 50,000,000 ₫ |
-| User | <user3@uit.edu.vn> | password | 200,000,000 ₫ |
-| User (zero balance) | <user4@uit.edu.vn> | password | 0 ₫ |
-| User (locked) | <user5@uit.edu.vn> | password | 75,000,000 ₫ |
+| Role                | Email              | Password | Balance       |
+| ------------------- | ------------------ | -------- | ------------- |
+| Administrator       | <admin@uit.edu.vn> | password | —             |
+| User                | <user1@uit.edu.vn> | password | 100,000,000 ₫ |
+| User                | <user2@uit.edu.vn> | password | 50,000,000 ₫  |
+| User                | <user3@uit.edu.vn> | password | 200,000,000 ₫ |
+| User (zero balance) | <user4@uit.edu.vn> | password | 0 ₫           |
+| User (locked)       | <user5@uit.edu.vn> | password | 75,000,000 ₫  |
 
 ## Project Structure
 
@@ -160,10 +160,15 @@ php artisan migrate:rollback          # Roll back the last migration batch
 ### Code Quality
 
 ```bash
+# TypeScript / React
 npm run lint                # Lint TypeScript/React
 npm run lint:fix            # Lint and auto-fix
 npm run format              # Format with Prettier
 npm run type-check          # TypeScript type checking
+
+# PHP
+composer lint               # Check PHP code style (Pint dry-run)
+composer format             # Auto-fix PHP code style (Pint)
 ```
 
 ### Build
@@ -174,16 +179,16 @@ npm run build               # Production asset build
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [docs/01-project-overview.md](docs/01-project-overview.md) | Project goals, scope, and stakeholders |
-| [docs/02-tech-stack.md](docs/02-tech-stack.md) | Technology choices and rationale |
-| [docs/03-architecture.md](docs/03-architecture.md) | System architecture and request flow |
-| [docs/04-database-design.md](docs/04-database-design.md) | Database schema and ERD |
-| [docs/05-folder-structure.md](docs/05-folder-structure.md) | Codebase organization |
-| [docs/06-coding-standards.md](docs/06-coding-standards.md) | Style guides and conventions |
-| [docs/07-security-guidelines.md](docs/07-security-guidelines.md) | Security policies and practices |
-| [docs/08-phase1-tasks.md](docs/08-phase1-tasks.md) | Phase 1 task breakdown |
+| Document                                                         | Description                            |
+| ---------------------------------------------------------------- | -------------------------------------- |
+| [docs/01-project-overview.md](docs/01-project-overview.md)       | Project goals, scope, and stakeholders |
+| [docs/02-tech-stack.md](docs/02-tech-stack.md)                   | Technology choices and rationale       |
+| [docs/03-architecture.md](docs/03-architecture.md)               | System architecture and request flow   |
+| [docs/04-database-design.md](docs/04-database-design.md)         | Database schema and ERD                |
+| [docs/05-folder-structure.md](docs/05-folder-structure.md)       | Codebase organization                  |
+| [docs/06-coding-standards.md](docs/06-coding-standards.md)       | Style guides and conventions           |
+| [docs/07-security-guidelines.md](docs/07-security-guidelines.md) | Security policies and practices        |
+| [docs/08-phase1-tasks.md](docs/08-phase1-tasks.md)               | Phase 1 task breakdown                 |
 
 ## Database Export
 
