@@ -1,20 +1,31 @@
 {
     "compilerOptions": {
-        "allowJs": true,
+        "target": "ES2020",
+        "lib": ["DOM", "DOM.Iterable", "ES2020"],
         "module": "ESNext",
         "moduleResolution": "bundler",
         "jsx": "react-jsx",
         "strict": true,
-        "isolatedModules": true,
-        "target": "ESNext",
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
         "esModuleInterop": true,
-        "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
         "noEmit": true,
         "paths": {
             "@/*": ["./resources/js/*"],
             "ziggy-js": ["./vendor/tightenco/ziggy"]
         }
     },
-    "include": ["resources/js/**/*.ts", "resources/js/**/*.tsx", "resources/js/**/*.d.ts"]
+    "include": [
+        "resources/js/**/*.ts",
+        "resources/js/**/*.tsx",
+        "resources/js/**/*.d.ts",
+        "vite.config.js"
+    ]
 }

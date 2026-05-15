@@ -1,14 +1,7 @@
-export interface User {
-    id: number;
-    name: string;
-    email: string;
-    email_verified_at?: string;
-}
+import type { User } from './models';
+import type { AuthPageProps } from './inertia';
 
-export type PageProps<
-    T extends Record<string, unknown> = Record<string, unknown>,
-> = T & {
-    auth: {
-        user: User;
-    };
-};
+export type { User };
+
+export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T &
+    AuthPageProps;
