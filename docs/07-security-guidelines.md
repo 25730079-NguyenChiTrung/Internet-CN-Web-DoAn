@@ -8,17 +8,17 @@ This application implements defense-in-depth across multiple layers. Security is
 
 ### Primary Threats
 
-| Threat | Likelihood | Impact | Mitigation Layer |
-|--------|------------|--------|------------------|
-| SQL Injection | Medium | High | ORM (Eloquent), Form Requests |
-| Cross-Site Scripting (XSS) | Medium | High | React auto-escaping, no `dangerouslySetInnerHTML` |
-| Cross-Site Request Forgery (CSRF) | Low | High | Laravel CSRF middleware |
-| Broken Access Control | High | High | Middleware + Form Request authorize() |
-| Mass Assignment | Medium | Medium | `$fillable` on all Models |
-| Session Hijacking | Low | High | Secure cookies, HTTPS in production |
-| Brute Force Login | High | Medium | Rate limiting |
-| Insecure Dependencies | Medium | Variable | `composer audit`, `npm audit` |
-| Information Disclosure | Medium | Low | Generic error messages, no debug in prod |
+| Threat                            | Likelihood | Impact   | Mitigation Layer                                  |
+| --------------------------------- | ---------- | -------- | ------------------------------------------------- |
+| SQL Injection                     | Medium     | High     | ORM (Eloquent), Form Requests                     |
+| Cross-Site Scripting (XSS)        | Medium     | High     | React auto-escaping, no `dangerouslySetInnerHTML` |
+| Cross-Site Request Forgery (CSRF) | Low        | High     | Laravel CSRF middleware                           |
+| Broken Access Control             | High       | High     | Middleware + Form Request authorize()             |
+| Mass Assignment                   | Medium     | Medium   | `$fillable` on all Models                         |
+| Session Hijacking                 | Low        | High     | Secure cookies, HTTPS in production               |
+| Brute Force Login                 | High       | Medium   | Rate limiting                                     |
+| Insecure Dependencies             | Medium     | Variable | `composer audit`, `pnpm audit`                    |
+| Information Disclosure            | Medium     | Low      | Generic error messages, no debug in prod          |
 
 ### Assets to Protect
 
@@ -89,6 +89,7 @@ return [
 ```
 
 Production `.env`:
+
 ```env
 SESSION_SECURE_COOKIE=true
 SESSION_DRIVER=database
@@ -118,6 +119,7 @@ Throttle format: `throttle:{max_attempts},{decay_minutes}`.
 Two roles: `user` and `admin`. Enforced at multiple layers.
 
 **Route Layer** (middleware):
+
 ```php
 Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
     // All routes here require admin role
@@ -125,6 +127,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->group(function () {
 ```
 
 **Form Request Layer** (defense in depth):
+
 ```php
 public function authorize(): bool
 {
@@ -149,6 +152,7 @@ public function show(Transaction $transaction)
 ### Self-Protection
 
 Admin users cannot:
+
 - Delete or deactivate themselves
 - Demote themselves from admin role
 
@@ -198,18 +202,18 @@ class StoreStockRequest extends FormRequest
 
 ### Validation Rules Reference
 
-| Rule | Purpose |
-|------|---------|
-| `required` | Field must be present and non-empty |
-| `string`, `integer`, `numeric` | Type check |
-| `min:N`, `max:N` | Length or range |
-| `email` | Email format |
-| `unique:table,column` | Database uniqueness |
-| `exists:table,column` | Database existence |
-| `in:val1,val2` | Enum-like values |
-| `regex:/pattern/` | Pattern match |
-| `confirmed` | Matches `field_confirmation` |
-| `mimes:type1,type2` | File MIME types |
+| Rule                           | Purpose                             |
+| ------------------------------ | ----------------------------------- |
+| `required`                     | Field must be present and non-empty |
+| `string`, `integer`, `numeric` | Type check                          |
+| `min:N`, `max:N`               | Length or range                     |
+| `email`                        | Email format                        |
+| `unique:table,column`          | Database uniqueness                 |
+| `exists:table,column`          | Database existence                  |
+| `in:val1,val2`                 | Enum-like values                    |
+| `regex:/pattern/`              | Pattern match                       |
+| `confirmed`                    | Matches `field_confirmation`        |
+| `mimes:type1,type2`            | File MIME types                     |
 
 ### Never Trust Client Data
 
@@ -279,10 +283,10 @@ import DOMPurify from 'dompurify';
 
 // If you MUST render HTML
 <div
-  dangerouslySetInnerHTML={{
-    __html: DOMPurify.sanitize(richTextContent)
-  }}
-/>
+    dangerouslySetInnerHTML={{
+        __html: DOMPurify.sanitize(richTextContent),
+    }}
+/>;
 ```
 
 For Phase 1, we do not render user HTML anywhere.
@@ -515,17 +519,18 @@ Log::info('Token issued', ['token' => $jwt]);
 composer audit
 
 # Frontend
-npm audit
+pnpm audit
 
 # Fix automatically if safe
-npm audit fix
+pnpm audit --fix
 ```
 
 ### Version Pinning
 
 Lock files are committed to repository:
+
 - `composer.lock`
-- `package-lock.json`
+- `pnpm-lock.yaml`
 
 This ensures reproducible builds and prevents supply chain attacks via dependency drift.
 
@@ -600,6 +605,7 @@ expose_php = Off
 ### Disable Debug Routes
 
 Remove or restrict access to:
+
 - `/_ignition/` (Whoops error page) — disabled when `APP_DEBUG=false`
 - `/telescope` — auth-gated to admin only
 - `/horizon` — auth-gated to admin only
@@ -613,7 +619,7 @@ Remove or restrict access to:
 - [ ] Database credentials use dedicated user with minimum privileges
 - [ ] HTTPS enforced (with valid certificate)
 - [ ] `composer audit` shows no high/critical issues
-- [ ] `npm audit` shows no high/critical issues
+- [ ] `pnpm audit` shows no high/critical issues
 - [ ] Rate limiting enabled on auth endpoints
 - [ ] CSRF protection enabled (default, do not disable)
 - [ ] Security headers configured

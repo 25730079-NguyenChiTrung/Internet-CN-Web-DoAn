@@ -25,22 +25,22 @@ Phase 1 does **not** include:
 
 ## Deliverables
 
-| # | Deliverable | Location |
-|---|-------------|----------|
-| 1 | Initialized Laravel project | Project root |
-| 2 | 5 migration files | `database/migrations/` |
-| 3 | 5 Eloquent models | `app/Models/` |
-| 4 | 3 seeders | `database/seeders/` |
-| 5 | Admin middleware | `app/Http/Middleware/EnsureUserIsAdmin.php` |
-| 6 | Route definitions with middleware groups | `routes/web.php` |
-| 7 | 3 layouts (guest, app, admin) | `resources/js/layouts/` |
-| 8 | ~10 shared React components | `resources/js/components/shared/` |
-| 9 | TypeScript types | `resources/js/types/` |
-| 10 | Format utilities | `resources/js/lib/format.ts` |
-| 11 | Placeholder pages | `resources/js/Pages/` |
-| 12 | ESLint, Prettier, Husky configuration | Project root |
-| 13 | Documentation | `docs/`, `README.md` |
-| 14 | Completion report | `PHASE_1_COMPLETION_REPORT.md` |
+| #   | Deliverable                              | Location                                    |
+| --- | ---------------------------------------- | ------------------------------------------- |
+| 1   | Initialized Laravel project              | Project root                                |
+| 2   | 5 migration files                        | `database/migrations/`                      |
+| 3   | 5 Eloquent models                        | `app/Models/`                               |
+| 4   | 3 seeders                                | `database/seeders/`                         |
+| 5   | Admin middleware                         | `app/Http/Middleware/EnsureUserIsAdmin.php` |
+| 6   | Route definitions with middleware groups | `routes/web.php`                            |
+| 7   | 3 layouts (guest, app, admin)            | `resources/js/layouts/`                     |
+| 8   | ~10 shared React components              | `resources/js/components/shared/`           |
+| 9   | TypeScript types                         | `resources/js/types/`                       |
+| 10  | Format utilities                         | `resources/js/lib/format.ts`                |
+| 11  | Placeholder pages                        | `resources/js/Pages/`                       |
+| 12  | ESLint, Prettier, Husky configuration    | Project root                                |
+| 13  | Documentation                            | `docs/`, `README.md`                        |
+| 14  | Completion report                        | `PHASE_1_COMPLETION_REPORT.md`              |
 
 ## Task Breakdown
 
@@ -63,7 +63,7 @@ Verify:
 ```bash
 composer require laravel/breeze --dev
 php artisan breeze:install react --typescript
-npm install
+pnpm install
 ```
 
 Important: Do **not** select SSR option (adds complexity not needed).
@@ -785,44 +785,44 @@ export default {
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    :root {
+        --background: 0 0% 100%;
+        --foreground: 222.2 84% 4.9%;
 
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
+        --primary: 221.2 83.2% 53.3%;
+        --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+        --secondary: 210 40% 96.1%;
+        --secondary-foreground: 222.2 47.4% 11.2%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+        --muted: 210 40% 96.1%;
+        --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+        --accent: 210 40% 96.1%;
+        --accent-foreground: 222.2 47.4% 11.2%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+        --border: 214.3 31.8% 91.4%;
+        --input: 214.3 31.8% 91.4%;
+        --ring: 221.2 83.2% 53.3%;
 
-    --radius: 0.5rem;
+        --radius: 0.5rem;
 
-    --price-up: 142 71% 45%;
-    --price-down: 0 84% 60%;
-    --price-flat: 215 20% 65%;
-  }
+        --price-up: 142 71% 45%;
+        --price-down: 0 84% 60%;
+        --price-flat: 215 20% 65%;
+    }
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
 }
 ```
 
@@ -854,8 +854,8 @@ npx shadcn@latest add button input label dialog dropdown-menu \
 #### B6. Install Additional Dependencies
 
 ```bash
-npm install lucide-react react-hot-toast date-fns recharts
-npm install -D prettier prettier-plugin-tailwindcss
+pnpm add lucide-react react-hot-toast date-fns recharts
+pnpm add -D prettier prettier-plugin-tailwindcss
 ```
 
 #### B7. Configure TypeScript Strict Mode
@@ -886,10 +886,7 @@ npm install -D prettier prettier-plugin-tailwindcss
             "@/*": ["./resources/js/*"]
         }
     },
-    "include": [
-        "resources/js/**/*",
-        "vite.config.ts"
-    ]
+    "include": ["resources/js/**/*", "vite.config.ts"]
 }
 ```
 
@@ -901,75 +898,75 @@ npm install -D prettier prettier-plugin-tailwindcss
 export type UserRole = 'user' | 'admin';
 
 export interface User {
-  id: number;
-  name: string;
-  email: string;
-  email_verified_at: string | null;
-  role: UserRole;
-  balance: number;
-  is_active: boolean;
-  is_admin: boolean;
-  created_at: string;
-  updated_at: string;
+    id: number;
+    name: string;
+    email: string;
+    email_verified_at: string | null;
+    role: UserRole;
+    balance: number;
+    is_active: boolean;
+    is_admin: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export type Exchange = 'HOSE' | 'HNX' | 'UPCOM';
 
 export interface Stock {
-  id: number;
-  symbol: string;
-  company_name: string;
-  sector: string | null;
-  exchange: Exchange;
-  current_price: number;
-  previous_close: number;
-  description: string | null;
-  logo_url: string | null;
-  is_active: boolean;
-  change_percent: number;
-  trend: 'up' | 'down' | 'flat';
-  created_at: string;
-  updated_at: string;
+    id: number;
+    symbol: string;
+    company_name: string;
+    sector: string | null;
+    exchange: Exchange;
+    current_price: number;
+    previous_close: number;
+    description: string | null;
+    logo_url: string | null;
+    is_active: boolean;
+    change_percent: number;
+    trend: 'up' | 'down' | 'flat';
+    created_at: string;
+    updated_at: string;
 }
 
 export type TransactionType = 'buy' | 'sell';
 export type TransactionStatus = 'pending' | 'completed' | 'cancelled';
 
 export interface Transaction {
-  id: number;
-  user_id: number;
-  stock_id: number;
-  type: TransactionType;
-  quantity: number;
-  price: number;
-  total: number;
-  fee: number;
-  status: TransactionStatus;
-  executed_at: string | null;
-  created_at: string;
-  updated_at: string;
-  user?: User;
-  stock?: Stock;
+    id: number;
+    user_id: number;
+    stock_id: number;
+    type: TransactionType;
+    quantity: number;
+    price: number;
+    total: number;
+    fee: number;
+    status: TransactionStatus;
+    executed_at: string | null;
+    created_at: string;
+    updated_at: string;
+    user?: User;
+    stock?: Stock;
 }
 
 export interface Portfolio {
-  id: number;
-  user_id: number;
-  stock_id: number;
-  quantity: number;
-  avg_price: number;
-  created_at: string;
-  updated_at: string;
-  stock?: Stock;
+    id: number;
+    user_id: number;
+    stock_id: number;
+    quantity: number;
+    avg_price: number;
+    created_at: string;
+    updated_at: string;
+    stock?: Stock;
 }
 
 export interface PriceHistory {
-  id: number;
-  stock_id: number;
-  price: number;
-  date: string;
-  created_at: string;
-  updated_at: string;
+    id: number;
+    stock_id: number;
+    price: number;
+    date: string;
+    created_at: string;
+    updated_at: string;
 }
 ```
 
@@ -979,18 +976,18 @@ export interface PriceHistory {
 import type { User } from './models';
 
 export interface PageProps {
-  auth: {
-    user: User | null;
-  };
-  flash: {
-    success: string | null;
-    error: string | null;
-  };
-  errors: Record<string, string>;
-  ziggy: {
-    location: string;
-    [key: string]: unknown;
-  };
+    auth: {
+        user: User | null;
+    };
+    flash: {
+        success: string | null;
+        error: string | null;
+    };
+    errors: Record<string, string>;
+    ziggy: {
+        location: string;
+        [key: string]: unknown;
+    };
 }
 
 export type InertiaPageProps<T = Record<string, unknown>> = T & PageProps;
@@ -1005,58 +1002,58 @@ export type InertiaPageProps<T = Record<string, unknown>> = T & PageProps;
  * Format a number as Vietnamese Dong currency.
  */
 export function formatCurrency(amount: number | string): string {
-  const value = typeof amount === 'string' ? parseFloat(amount) : amount;
-  if (isNaN(value)) return '0 ₫';
-  return new Intl.NumberFormat('vi-VN', {
-    style: 'currency',
-    currency: 'VND',
-    maximumFractionDigits: 0,
-  }).format(value);
+    const value = typeof amount === 'string' ? parseFloat(amount) : amount;
+    if (isNaN(value)) return '0 ₫';
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+        maximumFractionDigits: 0,
+    }).format(value);
 }
 
 /**
  * Format a percentage value with sign.
  */
 export function formatPercent(value: number | string, decimals = 2): string {
-  const num = typeof value === 'string' ? parseFloat(value) : value;
-  if (isNaN(num)) return '0%';
-  const sign = num > 0 ? '+' : '';
-  return `${sign}${num.toFixed(decimals)}%`;
+    const num = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(num)) return '0%';
+    const sign = num > 0 ? '+' : '';
+    return `${sign}${num.toFixed(decimals)}%`;
 }
 
 /**
  * Format a number with thousand separators.
  */
 export function formatNumber(value: number | string): string {
-  const num = typeof value === 'string' ? parseFloat(value) : value;
-  if (isNaN(num)) return '0';
-  return new Intl.NumberFormat('vi-VN').format(num);
+    const num = typeof value === 'string' ? parseFloat(value) : value;
+    if (isNaN(num)) return '0';
+    return new Intl.NumberFormat('vi-VN').format(num);
 }
 
 /**
  * Format a date string to DD/MM/YYYY.
  */
 export function formatDate(date: string | Date): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-  }).format(d);
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return new Intl.DateTimeFormat('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+    }).format(d);
 }
 
 /**
  * Format a date string to DD/MM/YYYY HH:mm.
  */
 export function formatDateTime(date: string | Date): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('vi-VN', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(d);
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return new Intl.DateTimeFormat('vi-VN', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).format(d);
 }
 ```
 
@@ -1101,28 +1098,24 @@ import react from 'eslint-plugin-react';
 import reactHooks from 'eslint-plugin-react-hooks';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
-export default tseslint.config(
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  {
+export default tseslint.config(js.configs.recommended, ...tseslint.configs.recommended, {
     files: ['**/*.{ts,tsx}'],
     plugins: {
-      react,
-      'react-hooks': reactHooks,
-      'jsx-a11y': jsxA11y,
+        react,
+        'react-hooks': reactHooks,
+        'jsx-a11y': jsxA11y,
     },
     rules: {
-      ...react.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      ...jsxA11y.configs.recommended.rules,
-      'react/react-in-jsx-scope': 'off',
-      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+        ...react.configs.recommended.rules,
+        ...reactHooks.configs.recommended.rules,
+        ...jsxA11y.configs.recommended.rules,
+        'react/react-in-jsx-scope': 'off',
+        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
     settings: {
-      react: { version: 'detect' },
+        react: { version: 'detect' },
     },
-  },
-);
+});
 ```
 
 #### C2. Prettier Configuration
@@ -1131,12 +1124,12 @@ export default tseslint.config(
 
 ```json
 {
-  "semi": true,
-  "singleQuote": true,
-  "trailingComma": "all",
-  "tabWidth": 2,
-  "printWidth": 100,
-  "plugins": ["prettier-plugin-tailwindcss"]
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "tabWidth": 2,
+    "printWidth": 100,
+    "plugins": ["prettier-plugin-tailwindcss"]
 }
 ```
 
@@ -1165,8 +1158,8 @@ trim_trailing_whitespace = false
 #### C4. Husky + lint-staged
 
 ```bash
-npm install -D husky lint-staged
-npx husky init
+pnpm add -D husky lint-staged
+pnpm exec husky init
 ```
 
 `.husky/pre-commit`:
@@ -1179,15 +1172,10 @@ npx lint-staged
 
 ```json
 {
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{css,json,md}": [
-      "prettier --write"
-    ]
-  }
+    "lint-staged": {
+        "*.{ts,tsx}": ["eslint --fix", "prettier --write"],
+        "*.{css,json,md}": ["prettier --write"]
+    }
 }
 ```
 
@@ -1197,14 +1185,14 @@ Add to `package.json`:
 
 ```json
 {
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint resources/js --ext .ts,.tsx",
-    "lint:fix": "eslint resources/js --ext .ts,.tsx --fix",
-    "format": "prettier --write 'resources/js/**/*.{ts,tsx,css}'",
-    "type-check": "tsc --noEmit"
-  }
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "lint": "eslint resources/js --ext .ts,.tsx",
+        "lint:fix": "eslint resources/js --ext .ts,.tsx --fix",
+        "format": "prettier --write 'resources/js/**/*.{ts,tsx,css}'",
+        "type-check": "tsc --noEmit"
+    }
 }
 ```
 
@@ -1258,11 +1246,11 @@ Create comprehensive README with:
 php artisan migrate:fresh --seed
 
 # Build assets
-npm run build
+pnpm run build
 
 # Start dev servers (in separate terminals)
 php artisan serve
-npm run dev
+pnpm run dev
 ```
 
 #### D2. Manual Smoke Test
@@ -1278,15 +1266,15 @@ npm run dev
 #### D3. Linting
 
 ```bash
-npm run lint        # Should pass with 0 errors
-npm run type-check  # Should pass with 0 errors
+pnpm run lint        # Should pass with 0 errors
+pnpm run type-check  # Should pass with 0 errors
 ```
 
 #### D4. Security Audit
 
 ```bash
 composer audit     # Should show 0 critical/high
-npm audit          # Should show 0 critical/high
+pnpm audit         # Should show 0 critical/high
 ```
 
 #### D5. Completion Report
@@ -1305,11 +1293,11 @@ Create `PHASE_1_COMPLETION_REPORT.md` with:
 Phase 1 is complete when:
 
 - [ ] `php artisan migrate:fresh --seed` runs without errors
-- [ ] `npm run build` completes without errors
-- [ ] `npm run lint` passes
-- [ ] `npm run type-check` passes
+- [ ] `pnpm run build` completes without errors
+- [ ] `pnpm run lint` passes
+- [ ] `pnpm run type-check` passes
 - [ ] `composer audit` shows no high/critical vulnerabilities
-- [ ] `npm audit` shows no high/critical vulnerabilities
+- [ ] `pnpm audit` shows no high/critical vulnerabilities
 - [ ] Admin user can log in and reach `/admin`
 - [ ] Regular user can log in and reach `/dashboard`
 - [ ] Regular user receives 403 when accessing `/admin`

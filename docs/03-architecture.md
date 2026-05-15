@@ -120,13 +120,13 @@ This hybrid approach combines the developer experience of an SPA (component-base
 
 URLs are organized by audience:
 
-| Prefix | Audience | Authentication | Authorization |
-|--------|----------|----------------|---------------|
-| `/` (root) | Public | Not required | None |
-| `/stocks/*` | Public | Not required | None |
-| `/login`, `/register` | Public | Not required | None |
-| `/dashboard`, `/portfolio`, `/transactions` | Authenticated user | Required | Active account |
-| `/admin/*` | Administrator | Required | `role=admin` |
+| Prefix                                      | Audience           | Authentication | Authorization  |
+| ------------------------------------------- | ------------------ | -------------- | -------------- |
+| `/` (root)                                  | Public             | Not required   | None           |
+| `/stocks/*`                                 | Public             | Not required   | None           |
+| `/login`, `/register`                       | Public             | Not required   | None           |
+| `/dashboard`, `/portfolio`, `/transactions` | Authenticated user | Required       | Active account |
+| `/admin/*`                                  | Administrator      | Required       | `role=admin`   |
 
 This is enforced by Laravel middleware groups:
 
@@ -156,6 +156,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 ### Authentication
 
 Session-based authentication using Laravel Breeze:
+
 - Login form submits credentials
 - Server validates and creates session
 - Session ID stored in `laravel_session` cookie (HttpOnly, SameSite=Lax)
@@ -219,10 +220,12 @@ export default function Index({ stocks, filters }: Props) {
 ## State Management
 
 ### Server-side State
+
 - Database (source of truth)
 - Session (per-user, ephemeral)
 
 ### Client-side State
+
 - **Page props**: From Inertia (always fresh on navigation)
 - **Form state**: `useForm` hook
 - **UI state**: `useState` for local interactions (modals, dropdowns)
@@ -231,11 +234,13 @@ export default function Index({ stocks, filters }: Props) {
 ## Error Handling
 
 ### Backend
+
 - `try/catch` in Controllers/Services
 - Log errors with context
 - Return user-friendly messages via flash (`back()->with('error', ...)`)
 
 ### Frontend
+
 - Inertia automatically handles 422 (validation errors) and 500 (errors)
 - Error pages: 403, 404, 500, 503 in `resources/js/Pages/Errors/`
 - Toast notifications for transient errors
@@ -251,6 +256,7 @@ export default function Index({ stocks, filters }: Props) {
 Phase 1: No caching beyond Laravel defaults.
 
 Future phases may add:
+
 - Route caching
 - Config caching
 - Query caching for stock listings (Redis)
@@ -264,14 +270,14 @@ Future phases may add:
 php artisan serve
 
 # Terminal 2: Vite (hot reload)
-npm run dev
+pnpm run dev
 ```
 
 ### Production
 
 ```bash
 # Build assets
-npm run build
+pnpm run build
 
 # Cache configurations
 php artisan config:cache
@@ -288,15 +294,19 @@ php artisan migrate --force
 ## Cross-Cutting Concerns
 
 ### Internationalization
+
 Strings displayed to end users are in Vietnamese. Internal code, comments, log messages, and error messages for developers are in English.
 
 ### Time Zones
+
 - Database stores timestamps in UTC
 - Display in `Asia/Ho_Chi_Minh` timezone
 - Configured in `config/app.php`
 
 ### Money Handling
+
 All monetary values use `DECIMAL(15,2)` in MySQL and the `decimal:2` cast in Eloquent models. Currency display is Vietnamese Dong (VND).
 
 ### File Storage
+
 Local disk for Phase 1 (`storage/app/public/`). Future phases may use S3 or equivalent.

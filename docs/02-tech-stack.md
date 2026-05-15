@@ -187,7 +187,7 @@ PHP code formatter with Laravel preset.
 For development and demo, the application runs locally with:
 
 - **XAMPP** (provides PHP 8.2+, MySQL 8, Apache, and phpMyAdmin in one installer)
-- **Node.js 20 LTS** (for Vite and npm)
+- **Node.js 20 LTS** (for Vite and pnpm)
 
 Team members access phpMyAdmin at **http://localhost/phpmyadmin** after starting Apache and MySQL in the XAMPP Control Panel.
 
@@ -208,7 +208,7 @@ For production demo, deployment options:
 | Password hashing         | bcrypt (Laravel default)                |
 | Session security         | HttpOnly + Secure cookies in production |
 | Rate limiting            | Laravel built-in throttle middleware    |
-| Dependency auditing      | `composer audit`, `npm audit`           |
+| Dependency auditing      | `composer audit`, `pnpm audit`          |
 
 ## Version Pinning Strategy
 
@@ -231,13 +231,13 @@ We use **caret (^) ranges** for minor/patch updates but pin **major versions**:
 }
 ```
 
-Lock files (`composer.lock`, `package-lock.json`) are committed to ensure reproducible builds.
+Lock files (`composer.lock`, `pnpm-lock.yaml`) are committed to ensure reproducible builds.
 
 ## Upgrade Cadence
 
 | Frequency | Action                                |
 | --------- | ------------------------------------- |
-| Weekly    | Review `composer audit`, `npm audit`  |
+| Weekly    | Review `composer audit`, `pnpm audit` |
 | Monthly   | Update patch versions of dependencies |
 | Quarterly | Evaluate minor version updates        |
 | Annually  | Major version reviews                 |
@@ -250,5 +250,5 @@ Lock files (`composer.lock`, `package-lock.json`) are committed to ensure reprod
 | Node.js   | 18.x                                          | 20.x LTS    |
 | MySQL     | 8.0                                           | 8.0 latest  |
 | Composer  | 2.x                                           | latest      |
-| npm       | 9.x                                           | latest      |
+| pnpm      | 10.x                                          | latest      |
 | Browser   | Chrome 90+, Firefox 88+, Safari 14+, Edge 90+ | latest      |

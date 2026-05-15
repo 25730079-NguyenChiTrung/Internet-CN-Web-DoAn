@@ -24,6 +24,7 @@ This application provides a paper-trading environment where users can browse Vie
 - **XAMPP** (includes PHP 8.2+, MySQL 8, Apache, phpMyAdmin) — [download](https://www.apachefriends.org)
 - **Composer 2.x** — [download](https://getcomposer.org)
 - **Node.js 20 LTS** — [download](https://nodejs.org)
+- **pnpm 10.x** — [download](https://pnpm.io/installation) (`npm install -g pnpm`)
 
 ## Quick Start
 
@@ -47,7 +48,7 @@ cd Internet-CN-Web-DoAn
 
 ```bash
 composer install
-npm install
+pnpm install
 ```
 
 ### 4. Configure environment
@@ -90,7 +91,7 @@ php artisan serve
 **Terminal 2** (Vite dev server with hot reload):
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 ### 7. Open the application
@@ -99,16 +100,24 @@ Visit **http://localhost:8000**
 
 ## Demo Accounts
 
-After seeding, the following accounts are available:
+After running `php artisan migrate:fresh --seed`, the following accounts are ready to use. All passwords are `password`.
 
-| Role                | Email              | Password | Balance       |
-| ------------------- | ------------------ | -------- | ------------- |
-| Administrator       | <admin@uit.edu.vn> | password | —             |
-| User                | <user1@uit.edu.vn> | password | 100,000,000 ₫ |
-| User                | <user2@uit.edu.vn> | password | 50,000,000 ₫  |
-| User                | <user3@uit.edu.vn> | password | 200,000,000 ₫ |
-| User (zero balance) | <user4@uit.edu.vn> | password | 0 ₫           |
-| User (locked)       | <user5@uit.edu.vn> | password | 75,000,000 ₫  |
+| Role          | Email            | Balance       | Redirects to | Notes                                                                  |
+| ------------- | ---------------- | ------------- | ------------ | ---------------------------------------------------------------------- |
+| Administrator | admin@uit.edu.vn | —             | `/admin`     | Full access to admin panel. Cannot trade (no balance).                 |
+| User          | user1@uit.edu.vn | 100,000,000 ₫ | `/dashboard` | Standard account with moderate balance. Good for general testing.      |
+| User          | user2@uit.edu.vn | 50,000,000 ₫  | `/dashboard` | Lower balance — useful for testing insufficient-funds edge cases.      |
+| User          | user3@uit.edu.vn | 200,000,000 ₫ | `/dashboard` | High balance — useful for placing large orders without balance errors. |
+| User          | user4@uit.edu.vn | 0 ₫           | `/dashboard` | Zero balance — every buy order should be rejected.                     |
+| User (locked) | user5@uit.edu.vn | 75,000,000 ₫  | ✗ blocked    | Login returns _"Tài khoản đã bị khóa"_. Cannot access the app.         |
+
+### Login behavior
+
+- **Admin** accounts land on `/admin` (admin dashboard). Accessing any `/` user route still works but is not the primary flow.
+- **User** accounts land on `/dashboard`. Manually navigating to `/admin` returns HTTP 403.
+- **Locked** accounts are rejected at the login step — the session is never created.
+
+> If the table above shows stale data (e.g., a balance was changed during testing), run `php artisan migrate:fresh --seed` to reset all demo data.
 
 ## Project Structure
 
@@ -140,7 +149,7 @@ See `docs/05-folder-structure.md` for the complete layout.
 
 ```bash
 php artisan serve           # Start Laravel backend
-npm run dev                 # Start Vite dev server
+pnpm run dev                # Start Vite dev server
 ```
 
 ### Database
@@ -158,10 +167,10 @@ php artisan migrate:rollback          # Roll back the last migration batch
 
 ```bash
 # TypeScript / React
-npm run lint                # Lint TypeScript/React
-npm run lint:fix            # Lint and auto-fix
-npm run format              # Format with Prettier
-npm run type-check          # TypeScript type checking
+pnpm run lint               # Lint TypeScript/React
+pnpm run lint:fix           # Lint and auto-fix
+pnpm run format             # Format with Prettier
+pnpm run type-check         # TypeScript type checking
 
 # PHP
 composer lint               # Check PHP code style (Pint dry-run)
@@ -171,7 +180,7 @@ composer format             # Auto-fix PHP code style (Pint)
 ### Build
 
 ```bash
-npm run build               # Production asset build
+pnpm run build              # Production asset build
 ```
 
 ## Documentation
@@ -219,7 +228,7 @@ Make sure **Apache** is also started in XAMPP (phpMyAdmin is served by Apache, n
 
 ### Vite dev server doesn't connect
 
-Ensure both `php artisan serve` and `npm run dev` are running. Vite's hot reload requires the dev server on port 5173.
+Ensure both `php artisan serve` and `pnpm run dev` are running. Vite's hot reload requires the dev server on port 5173.
 
 ### "Class not found" errors
 
