@@ -21,36 +21,43 @@ This application provides a paper-trading environment where users can browse Vie
 
 ## Prerequisites
 
-- PHP 8.2 or higher
-- Composer 2.x
-- Node.js 20 LTS
-- MySQL 8.0
-- A local web server (Laragon, XAMPP, or the built-in PHP server)
+- **XAMPP** (includes PHP 8.2+, MySQL 8, Apache, phpMyAdmin) — [download](https://www.apachefriends.org)
+- **Composer 2.x** — [download](https://getcomposer.org)
+- **Node.js 20 LTS** — [download](https://nodejs.org)
 
 ## Quick Start
 
-### 1. Clone the repository
+### 1. Start XAMPP
+
+Open the **XAMPP Control Panel** and start both:
+
+- **Apache**
+- **MySQL**
+
+> phpMyAdmin will be available at **http://localhost/phpmyadmin** once both services are running.
+
+### 2. Clone the repository
 
 ```bash
 git clone <repository-url> Internet-CN-Web-DoAn
 cd Internet-CN-Web-DoAn
 ```
 
-### 2. Install dependencies
+### 3. Install dependencies
 
 ```bash
 composer install
 npm install
 ```
 
-### 3. Configure environment
+### 4. Configure environment
 
 ```bash
 cp .env.example .env
 php artisan key:generate
 ```
 
-Edit `.env` to match your local MySQL credentials:
+The default `.env` values already match XAMPP's MySQL defaults (root user, no password). Edit only if your setup differs:
 
 ```env
 DB_CONNECTION=mysql
@@ -61,25 +68,14 @@ DB_USERNAME=root
 DB_PASSWORD=
 ```
 
-### 4. Create the database
-
-Using phpMyAdmin: create a new database named `stock_website` with collation `utf8mb4_unicode_ci`.
-
-Or via command line:
-
-```sql
-CREATE DATABASE stock_website
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-```
-
-### 5. Run migrations and seed data
+### 5. Create the database and seed data
 
 ```bash
+php artisan db:create
 php artisan migrate:fresh --seed
 ```
 
-This creates all tables and populates them with demo data: 6 user accounts, 20 Vietnamese stocks, and 30 days of price history per stock.
+`db:create` reads `DB_DATABASE` from `.env` and creates the database automatically — no need to open phpMyAdmin manually. `migrate:fresh --seed` then creates all tables and populates them with demo data: 6 user accounts, 20 Vietnamese stocks, and 30 days of price history per stock.
 
 ### 6. Start the development servers
 
@@ -99,7 +95,7 @@ npm run dev
 
 ### 7. Open the application
 
-Visit <http://localhost:8000>
+Visit **http://localhost:8000**
 
 ## Demo Accounts
 
@@ -150,6 +146,7 @@ npm run dev                 # Start Vite dev server
 ### Database
 
 ```bash
+php artisan db:create                 # Create the database (first-time setup)
 php artisan migrate                   # Run pending migrations
 php artisan migrate:fresh             # Drop all tables and re-migrate
 php artisan migrate:fresh --seed      # Drop, migrate, and seed
@@ -190,12 +187,16 @@ npm run build               # Production asset build
 | [docs/07-security-guidelines.md](docs/07-security-guidelines.md) | Security policies and practices        |
 | [docs/08-phase1-tasks.md](docs/08-phase1-tasks.md)               | Phase 1 task breakdown                 |
 
+## Viewing the Database
+
+Open **http://localhost/phpmyadmin** (requires XAMPP MySQL to be running). Select the `stock_website` database from the left sidebar to browse tables and run queries.
+
 ## Database Export
 
 To export the database as SQL for academic submission:
 
-1. Open phpMyAdmin
-2. Select the `stock_website` database
+1. Open **http://localhost/phpmyadmin**
+2. Select the `stock_website` database from the left sidebar
 3. Click the **Export** tab
 4. Choose format **SQL**, method **Quick**
 5. Click **Go** to download `stock_website.sql`
@@ -204,7 +205,17 @@ To export the database as SQL for academic submission:
 
 ### Migration fails with "database does not exist"
 
-Create the database manually first (see step 4 above).
+Run `php artisan db:create` first (requires XAMPP MySQL to be running), then retry the migration.
+
+### Cannot connect to MySQL / SQLSTATE errors
+
+1. Open XAMPP Control Panel and verify **MySQL** shows a green "Running" status
+2. Confirm `.env` has `DB_HOST=127.0.0.1`, `DB_USERNAME=root`, `DB_PASSWORD=` (empty)
+3. XAMPP MySQL default port is `3306` — ensure nothing else occupies it
+
+### phpMyAdmin not opening
+
+Make sure **Apache** is also started in XAMPP (phpMyAdmin is served by Apache, not MySQL). Then visit http://localhost/phpmyadmin.
 
 ### Vite dev server doesn't connect
 
