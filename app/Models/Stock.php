@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Stock extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'symbol',
@@ -39,13 +40,19 @@ class Stock extends Model
         if ((float) $this->previous_close === 0.0) {
             return 0.0;
         }
+
         return round((((float) $this->current_price - (float) $this->previous_close) / (float) $this->previous_close) * 100, 2);
     }
 
     public function getTrendAttribute(): string
     {
-        if ((float) $this->current_price > (float) $this->previous_close) return 'up';
-        if ((float) $this->current_price < (float) $this->previous_close) return 'down';
+        if ((float) $this->current_price > (float) $this->previous_close) {
+            return 'up';
+        }
+        if ((float) $this->current_price < (float) $this->previous_close) {
+            return 'down';
+        }
+
         return 'flat';
     }
 
@@ -71,10 +78,13 @@ class Stock extends Model
 
     public function scopeSearch($query, ?string $keyword)
     {
-        if (!$keyword) return $query;
+        if (! $keyword) {
+            return $query;
+        }
+
         return $query->where(function ($q) use ($keyword) {
             $q->where('symbol', 'like', "%{$keyword}%")
-              ->orWhere('company_name', 'like', "%{$keyword}%");
+                ->orWhere('company_name', 'like', "%{$keyword}%");
         });
     }
 }

@@ -2,15 +2,17 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 
 abstract class BaseFormRequest extends FormRequest
 {
     /**
      * Common failure response: redirect back with input.
      */
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator): never
+    protected function failedValidation(Validator $validator): never
     {
-        throw new \Illuminate\Validation\ValidationException($validator);
+        throw new ValidationException($validator);
     }
 }
