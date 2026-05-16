@@ -169,7 +169,7 @@ Two-level authorization:
 1. **Route-level** (middleware): Coarse-grained, checks if user can access a route at all
 2. **Resource-level** (Policies, future): Fine-grained, checks if user can perform action on specific resource
 
-For Phase 1, only route-level authorization is implemented via the `admin` middleware:
+Currently, route-level authorization is implemented via the `admin` middleware:
 
 ```php
 // app/Http/Middleware/EnsureUserIsAdmin.php
@@ -253,13 +253,7 @@ export default function Index({ stocks, filters }: Props) {
 
 ## Caching Strategy
 
-Phase 1: No caching beyond Laravel defaults.
-
-Future phases may add:
-
-- Route caching
-- Config caching
-- Query caching for stock listings (Redis)
+No caching beyond Laravel defaults yet (future optimization).
 
 ## Build & Deployment
 
@@ -309,4 +303,4 @@ All monetary values use `DECIMAL(15,2)` in MySQL and the `decimal:2` cast in Elo
 
 ### File Storage
 
-Local disk for Phase 1 (`storage/app/public/`). Future phases may use S3 or equivalent.
+Local disk for now (`storage/app/public/`).

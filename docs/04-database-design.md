@@ -90,25 +90,27 @@ The database consists of five primary tables modeling users, securities, transac
 
 Stores all user accounts (regular users and administrators).
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key |
-| name | VARCHAR(255) | NOT NULL | Full name |
-| email | VARCHAR(255) | NOT NULL, UNIQUE | Login identifier |
-| email_verified_at | TIMESTAMP | NULL | Email verification time |
-| password | VARCHAR(255) | NOT NULL | Bcrypt hashed |
-| role | ENUM | NOT NULL, DEFAULT 'user' | Either 'user' or 'admin' |
-| balance | DECIMAL(15,2) | NOT NULL, DEFAULT 0.00 | Virtual currency balance in VND |
-| is_active | BOOLEAN | NOT NULL, DEFAULT TRUE | Account active status |
-| remember_token | VARCHAR(100) | NULL | "Remember me" cookie token |
-| created_at | TIMESTAMP | NULL | Record creation time |
-| updated_at | TIMESTAMP | NULL | Last update time |
+| Column            | Type            | Constraints              | Description                     |
+| ----------------- | --------------- | ------------------------ | ------------------------------- |
+| id                | BIGINT UNSIGNED | PK, AUTO_INCREMENT       | Primary key                     |
+| name              | VARCHAR(255)    | NOT NULL                 | Full name                       |
+| email             | VARCHAR(255)    | NOT NULL, UNIQUE         | Login identifier                |
+| email_verified_at | TIMESTAMP       | NULL                     | Email verification time         |
+| password          | VARCHAR(255)    | NOT NULL                 | Bcrypt hashed                   |
+| role              | ENUM            | NOT NULL, DEFAULT 'user' | Either 'user' or 'admin'        |
+| balance           | DECIMAL(15,2)   | NOT NULL, DEFAULT 0.00   | Virtual currency balance in VND |
+| is_active         | BOOLEAN         | NOT NULL, DEFAULT TRUE   | Account active status           |
+| remember_token    | VARCHAR(100)    | NULL                     | "Remember me" cookie token      |
+| created_at        | TIMESTAMP       | NULL                     | Record creation time            |
+| updated_at        | TIMESTAMP       | NULL                     | Last update time                |
 
 **Indexes**:
+
 - PRIMARY (id)
 - UNIQUE (email)
 
 **Business Rules**:
+
 - Email is unique system-wide
 - Default role is 'user'
 - Inactive accounts cannot log in
@@ -118,28 +120,30 @@ Stores all user accounts (regular users and administrators).
 
 Catalog of available securities.
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key |
-| symbol | VARCHAR(10) | NOT NULL, UNIQUE | Ticker symbol (e.g., VNM) |
-| company_name | VARCHAR(255) | NOT NULL | Full company name |
-| sector | VARCHAR(100) | NULL | Industry sector |
-| exchange | ENUM | NOT NULL, DEFAULT 'HOSE' | One of: HOSE, HNX, UPCOM |
-| current_price | DECIMAL(15,2) | NOT NULL, DEFAULT 0.00 | Current trading price |
-| previous_close | DECIMAL(15,2) | NOT NULL, DEFAULT 0.00 | Previous session close |
-| description | TEXT | NULL | Company description |
-| logo_url | VARCHAR(255) | NULL | URL to company logo |
-| is_active | BOOLEAN | NOT NULL, DEFAULT TRUE | Available for trading |
-| deleted_at | TIMESTAMP | NULL | Soft delete timestamp |
-| created_at | TIMESTAMP | NULL | Record creation time |
-| updated_at | TIMESTAMP | NULL | Last update time |
+| Column         | Type            | Constraints              | Description               |
+| -------------- | --------------- | ------------------------ | ------------------------- |
+| id             | BIGINT UNSIGNED | PK, AUTO_INCREMENT       | Primary key               |
+| symbol         | VARCHAR(10)     | NOT NULL, UNIQUE         | Ticker symbol (e.g., VNM) |
+| company_name   | VARCHAR(255)    | NOT NULL                 | Full company name         |
+| sector         | VARCHAR(100)    | NULL                     | Industry sector           |
+| exchange       | ENUM            | NOT NULL, DEFAULT 'HOSE' | One of: HOSE, HNX, UPCOM  |
+| current_price  | DECIMAL(15,2)   | NOT NULL, DEFAULT 0.00   | Current trading price     |
+| previous_close | DECIMAL(15,2)   | NOT NULL, DEFAULT 0.00   | Previous session close    |
+| description    | TEXT            | NULL                     | Company description       |
+| logo_url       | VARCHAR(255)    | NULL                     | URL to company logo       |
+| is_active      | BOOLEAN         | NOT NULL, DEFAULT TRUE   | Available for trading     |
+| deleted_at     | TIMESTAMP       | NULL                     | Soft delete timestamp     |
+| created_at     | TIMESTAMP       | NULL                     | Record creation time      |
+| updated_at     | TIMESTAMP       | NULL                     | Last update time          |
 
 **Indexes**:
+
 - PRIMARY (id)
 - UNIQUE (symbol)
 - INDEX (is_active)
 
 **Business Rules**:
+
 - Symbol must be unique and uppercase (e.g., VNM, FPT)
 - Soft delete preserves transaction history references
 - Inactive stocks cannot be traded but remain visible
@@ -148,31 +152,34 @@ Catalog of available securities.
 
 Append-only ledger of all buy/sell operations.
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key |
-| user_id | BIGINT UNSIGNED | FK, NOT NULL | References users.id |
-| stock_id | BIGINT UNSIGNED | FK, NOT NULL | References stocks.id |
-| type | ENUM | NOT NULL | Either 'buy' or 'sell' |
-| quantity | INTEGER | NOT NULL | Number of shares |
-| price | DECIMAL(15,2) | NOT NULL | Per-share price at execution |
-| total | DECIMAL(15,2) | NOT NULL | quantity × price |
-| fee | DECIMAL(15,2) | NOT NULL, DEFAULT 0.00 | Transaction fee |
-| status | ENUM | NOT NULL, DEFAULT 'pending' | One of: pending, completed, cancelled |
-| executed_at | TIMESTAMP | NULL | Execution timestamp |
-| created_at | TIMESTAMP | NULL | Order placement time |
-| updated_at | TIMESTAMP | NULL | Last update time |
+| Column      | Type            | Constraints                 | Description                           |
+| ----------- | --------------- | --------------------------- | ------------------------------------- |
+| id          | BIGINT UNSIGNED | PK, AUTO_INCREMENT          | Primary key                           |
+| user_id     | BIGINT UNSIGNED | FK, NOT NULL                | References users.id                   |
+| stock_id    | BIGINT UNSIGNED | FK, NOT NULL                | References stocks.id                  |
+| type        | ENUM            | NOT NULL                    | Either 'buy' or 'sell'                |
+| quantity    | INTEGER         | NOT NULL                    | Number of shares                      |
+| price       | DECIMAL(15,2)   | NOT NULL                    | Per-share price at execution          |
+| total       | DECIMAL(15,2)   | NOT NULL                    | quantity × price                      |
+| fee         | DECIMAL(15,2)   | NOT NULL, DEFAULT 0.00      | Transaction fee                       |
+| status      | ENUM            | NOT NULL, DEFAULT 'pending' | One of: pending, completed, cancelled |
+| executed_at | TIMESTAMP       | NULL                        | Execution timestamp                   |
+| created_at  | TIMESTAMP       | NULL                        | Order placement time                  |
+| updated_at  | TIMESTAMP       | NULL                        | Last update time                      |
 
 **Indexes**:
+
 - PRIMARY (id)
 - INDEX (user_id, created_at) — composite for "user transactions over time"
 - INDEX (stock_id, status) — composite for "stock activity by status"
 
 **Foreign Keys**:
+
 - user_id → users.id (ON DELETE CASCADE)
 - stock_id → stocks.id (ON DELETE RESTRICT — prevent deleting stocks with history)
 
 **Business Rules**:
+
 - Records are append-only (status updates allowed, content never modified)
 - Quantity must be positive
 - Total = quantity × price (enforced at application level)
@@ -182,25 +189,28 @@ Append-only ledger of all buy/sell operations.
 
 Current holdings per user. Updated by trading operations.
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key |
-| user_id | BIGINT UNSIGNED | FK, NOT NULL | References users.id |
-| stock_id | BIGINT UNSIGNED | FK, NOT NULL | References stocks.id |
-| quantity | INTEGER | NOT NULL | Shares owned |
-| avg_price | DECIMAL(15,2) | NOT NULL | Weighted average cost |
-| created_at | TIMESTAMP | NULL | Position opened time |
-| updated_at | TIMESTAMP | NULL | Last update time |
+| Column     | Type            | Constraints        | Description           |
+| ---------- | --------------- | ------------------ | --------------------- |
+| id         | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key           |
+| user_id    | BIGINT UNSIGNED | FK, NOT NULL       | References users.id   |
+| stock_id   | BIGINT UNSIGNED | FK, NOT NULL       | References stocks.id  |
+| quantity   | INTEGER         | NOT NULL           | Shares owned          |
+| avg_price  | DECIMAL(15,2)   | NOT NULL           | Weighted average cost |
+| created_at | TIMESTAMP       | NULL               | Position opened time  |
+| updated_at | TIMESTAMP       | NULL               | Last update time      |
 
 **Indexes**:
+
 - PRIMARY (id)
 - UNIQUE (user_id, stock_id) — one position per user/stock pair
 
 **Foreign Keys**:
+
 - user_id → users.id (ON DELETE CASCADE)
 - stock_id → stocks.id (ON DELETE RESTRICT)
 
 **Business Rules**:
+
 - One row per user/stock combination
 - When quantity reaches 0, the row is deleted (not kept at 0)
 - avg_price is the weighted average cost (recalculated on each buy)
@@ -209,35 +219,38 @@ Current holdings per user. Updated by trading operations.
 
 Daily historical price snapshots for charting.
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key |
-| stock_id | BIGINT UNSIGNED | FK, NOT NULL | References stocks.id |
-| price | DECIMAL(15,2) | NOT NULL | Price on the given date |
-| date | DATE | NOT NULL | Trading date |
-| created_at | TIMESTAMP | NULL | Record creation time |
-| updated_at | TIMESTAMP | NULL | Last update time |
+| Column     | Type            | Constraints        | Description             |
+| ---------- | --------------- | ------------------ | ----------------------- |
+| id         | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key             |
+| stock_id   | BIGINT UNSIGNED | FK, NOT NULL       | References stocks.id    |
+| price      | DECIMAL(15,2)   | NOT NULL           | Price on the given date |
+| date       | DATE            | NOT NULL           | Trading date            |
+| created_at | TIMESTAMP       | NULL               | Record creation time    |
+| updated_at | TIMESTAMP       | NULL               | Last update time        |
 
 **Indexes**:
+
 - PRIMARY (id)
 - UNIQUE (stock_id, date) — one entry per stock per day
 
 **Foreign Keys**:
+
 - stock_id → stocks.id (ON DELETE CASCADE)
 
 **Business Rules**:
+
 - One row per stock per date
 - Historical data populated by seeder (30 days per stock initially)
 
 ## Relationships Summary
 
-| From | To | Cardinality | Description |
-|------|----|-----|-------------|
-| users | transactions | 1:N | A user makes many transactions |
-| users | portfolios | 1:N | A user holds many positions |
-| stocks | transactions | 1:N | A stock has many transactions |
-| stocks | portfolios | 1:N | A stock appears in many portfolios |
-| stocks | price_histories | 1:N | A stock has many daily prices |
+| From   | To              | Cardinality | Description                        |
+| ------ | --------------- | ----------- | ---------------------------------- |
+| users  | transactions    | 1:N         | A user makes many transactions     |
+| users  | portfolios      | 1:N         | A user holds many positions        |
+| stocks | transactions    | 1:N         | A stock has many transactions      |
+| stocks | portfolios      | 1:N         | A stock appears in many portfolios |
+| stocks | price_histories | 1:N         | A stock has many daily prices      |
 
 ## Data Integrity Rules
 
@@ -270,6 +283,7 @@ Due to foreign key dependencies, migrations must run in this order:
 5. `create_price_histories_table` (depends on stocks)
 
 Plus auxiliary tables from Laravel defaults:
+
 - `create_password_reset_tokens_table`
 - `create_sessions_table`
 
@@ -277,17 +291,18 @@ Plus auxiliary tables from Laravel defaults:
 
 The `DatabaseSeeder` populates initial data:
 
-| Seeder | Records | Purpose |
-|--------|---------|---------|
-| UserSeeder | 1 admin + 5 users | Demo accounts |
-| StockSeeder | 20 Vietnamese stocks | Realistic catalog |
-| PriceHistorySeeder | ~600 entries (20 × 30 days) | Chart data |
+| Seeder             | Records                     | Purpose           |
+| ------------------ | --------------------------- | ----------------- |
+| UserSeeder         | 1 admin + 5 users           | Demo accounts     |
+| StockSeeder        | 20 Vietnamese stocks        | Realistic catalog |
+| PriceHistorySeeder | ~600 entries (20 × 30 days) | Chart data        |
 
 ## Performance Considerations
 
 ### Indexes
 
 All foreign keys are indexed (Laravel default for `constrained()`). Composite indexes added for common query patterns:
+
 - `transactions(user_id, created_at)` for user history listing
 - `transactions(stock_id, status)` for stock activity queries
 
@@ -310,9 +325,9 @@ $stocks = Stock::with('priceHistories')->get();
 
 All listing endpoints use pagination (20 items per page default) to prevent loading entire tables.
 
-## Future Considerations (Out of Scope for Phase 1)
+## Future Considerations
 
-- **Partitioning**: `price_histories` may grow large; consider partitioning by date in Phase 4+
+- **Partitioning**: `price_histories` may grow large; consider partitioning by date in the future
 - **Read replicas**: For scaling read traffic
 - **Caching**: Redis cache for stock listings, hot data
 - **Materialized views**: For computed aggregates (portfolio totals, market summary)
@@ -326,6 +341,7 @@ phpMyAdmin → Select database "stock_website" → Export → SQL → Go
 ```
 
 The exported file contains:
+
 - All `CREATE TABLE` statements
 - All `INSERT INTO` statements for seeded data
 - Indexes and foreign key constraints

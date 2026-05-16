@@ -289,7 +289,7 @@ import DOMPurify from 'dompurify';
 />;
 ```
 
-For Phase 1, we do not render user HTML anywhere.
+We do not render user HTML anywhere in the application.
 
 ### Inertia Page Props
 

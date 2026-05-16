@@ -85,7 +85,7 @@ app/
 │   ├── AppServiceProvider.php
 │   └── AuthServiceProvider.php
 └── Services/                                  # Business logic (added in later phases)
-    └── (TradingService, PortfolioService, etc. - Phase 2+)
+    └── (TradingService, PortfolioService, etc.)
 ```
 
 ## Database Layer (`database/`)
@@ -125,7 +125,7 @@ resources/js/
 │   ├── Admin/
 │   │   ├── Dashboard.tsx
 │   │   ├── Stocks/
-│   │   │   ├── Index.tsx                      # (Placeholder in Phase 1)
+│   │   │   ├── Index.tsx
 │   │   │   ├── Create.tsx
 │   │   │   └── Edit.tsx
 │   │   └── Users/
@@ -287,39 +287,38 @@ public/
 
 ## Naming Conventions Summary
 
-| Type | Convention | Example |
-|------|-----------|---------|
-| PHP class file | PascalCase | `StockController.php` |
-| PHP class | PascalCase | `class StockController` |
-| Migration file | snake_case timestamped | `2025_05_15_120000_create_stocks_table.php` |
-| Eloquent Model | PascalCase singular | `Stock.php`, `class Stock` |
-| Inertia Page | PascalCase | `Stocks/Index.tsx` |
-| React Component | kebab-case file | `stock-card.tsx` |
-| React Component name | PascalCase | `function StockCard()` |
-| Hook | kebab-case `use-*` | `use-debounce.ts` |
-| Utility (TS) | kebab-case | `format.ts`, `utils.ts` |
-| TypeScript type | PascalCase | `interface Stock`, `type PageProps` |
-| Database table | snake_case plural | `stocks`, `price_histories` |
-| Database column | snake_case | `current_price`, `is_active` |
-| Route name | dot-separated | `admin.stocks.index` |
-| Form Request | PascalCase ends with Request | `StoreStockRequest` |
+| Type                 | Convention                   | Example                                     |
+| -------------------- | ---------------------------- | ------------------------------------------- |
+| PHP class file       | PascalCase                   | `StockController.php`                       |
+| PHP class            | PascalCase                   | `class StockController`                     |
+| Migration file       | snake_case timestamped       | `2025_05_15_120000_create_stocks_table.php` |
+| Eloquent Model       | PascalCase singular          | `Stock.php`, `class Stock`                  |
+| Inertia Page         | PascalCase                   | `Stocks/Index.tsx`                          |
+| React Component      | kebab-case file              | `stock-card.tsx`                            |
+| React Component name | PascalCase                   | `function StockCard()`                      |
+| Hook                 | kebab-case `use-*`           | `use-debounce.ts`                           |
+| Utility (TS)         | kebab-case                   | `format.ts`, `utils.ts`                     |
+| TypeScript type      | PascalCase                   | `interface Stock`, `type PageProps`         |
+| Database table       | snake_case plural            | `stocks`, `price_histories`                 |
+| Database column      | snake_case                   | `current_price`, `is_active`                |
+| Route name           | dot-separated                | `admin.stocks.index`                        |
+| Form Request         | PascalCase ends with Request | `StoreStockRequest`                         |
 
 ## File Ownership Map (for team coordination)
 
-Modules are owned by specific developers in later phases:
+Each module is owned by one team member, responsible for both backend and frontend.
 
-| Path | Owner |
-|------|-------|
-| `app/Http/Controllers/Admin/StockController.php` | Module A |
-| `resources/js/Pages/Admin/Stocks/*` | Module A |
-| `app/Http/Controllers/Admin/UserController.php` | Module B |
-| `resources/js/Pages/Admin/Users/*` | Module B |
-| `app/Http/Controllers/StockController.php` | Module C |
-| `resources/js/Pages/Stocks/*` | Module C |
-| `app/Http/Controllers/TradingController.php` | Module D |
-| `app/Http/Controllers/PortfolioController.php` | Module D |
-| `resources/js/Pages/Portfolio.tsx` | Module D |
-| `resources/js/Pages/Transactions.tsx` | Module D |
-| Everything else (foundation) | Phase 1 setup |
+| Path                                             | Module                       |
+| ------------------------------------------------ | ---------------------------- |
+| `app/Http/Controllers/Admin/StockController.php` | M1: Admin Stocks CRUD        |
+| `resources/js/Pages/Admin/Stocks/*`              | M1: Admin Stocks CRUD        |
+| `app/Http/Controllers/Admin/UserController.php`  | M2: Admin Users Management   |
+| `resources/js/Pages/Admin/Users/*`               | M2: Admin Users Management   |
+| `app/Http/Controllers/StockController.php`       | M3: User Stocks Browser      |
+| `resources/js/Pages/Stocks/*`                    | M3: User Stocks Browser      |
+| `app/Http/Controllers/TradingController.php`     | M4: User Trading & Portfolio |
+| `app/Http/Controllers/PortfolioController.php`   | M4: User Trading & Portfolio |
+| `resources/js/Pages/Portfolio.tsx`               | M4: User Trading & Portfolio |
+| `resources/js/Pages/Transactions.tsx`            | M4: User Trading & Portfolio |
 
-This ownership map is referenced when assigning work in subsequent phases.
+See `docs/tasks/README.md` for full module descriptions and task details.

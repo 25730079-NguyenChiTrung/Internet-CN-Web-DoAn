@@ -284,14 +284,14 @@ $user = User::create($request->validated());
 
 ```json
 {
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "esModuleInterop": true
-  }
+    "compilerOptions": {
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "esModuleInterop": true
+    }
 }
 ```
 
@@ -302,29 +302,29 @@ Define types for all data structures:
 ```typescript
 // types/models.ts
 export interface User {
-  id: number;
-  name: string;
-  email: string;
-  role: 'user' | 'admin';
-  balance: number;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
+    id: number;
+    name: string;
+    email: string;
+    role: 'user' | 'admin';
+    balance: number;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
 }
 
 export interface Stock {
-  id: number;
-  symbol: string;
-  company_name: string;
-  sector: string | null;
-  exchange: 'HOSE' | 'HNX' | 'UPCOM';
-  current_price: number;
-  previous_close: number;
-  description: string | null;
-  is_active: boolean;
-  change_percent: number;     // Computed (accessor on backend)
-  created_at: string;
-  updated_at: string;
+    id: number;
+    symbol: string;
+    company_name: string;
+    sector: string | null;
+    exchange: 'HOSE' | 'HNX' | 'UPCOM';
+    current_price: number;
+    previous_close: number;
+    description: string | null;
+    is_active: boolean;
+    change_percent: number; // Computed (accessor on backend)
+    created_at: string;
+    updated_at: string;
 }
 ```
 
@@ -332,13 +332,13 @@ export interface Stock {
 
 ```typescript
 interface StockCardProps {
-  stock: Stock;
-  onClick?: (stock: Stock) => void;
-  className?: string;
+    stock: Stock;
+    onClick?: (stock: Stock) => void;
+    className?: string;
 }
 
 export function StockCard({ stock, onClick, className }: StockCardProps) {
-  // ...
+    // ...
 }
 ```
 
@@ -361,12 +361,7 @@ function process(data: unknown) {
 
 ```typescript
 function isUser(value: unknown): value is User {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'id' in value &&
-    'email' in value
-  );
+    return typeof value === 'object' && value !== null && 'id' in value && 'email' in value;
 }
 ```
 
@@ -377,12 +372,12 @@ Prefer arrow function components for consistency:
 ```tsx
 // GOOD
 export default function StockCard({ stock }: Props) {
-  return <div>{stock.symbol}</div>;
+    return <div>{stock.symbol}</div>;
 }
 
 // Or with const
 const StockCard = ({ stock }: Props) => {
-  return <div>{stock.symbol}</div>;
+    return <div>{stock.symbol}</div>;
 };
 ```
 
@@ -393,17 +388,17 @@ Custom hooks must start with `use`:
 ```typescript
 // hooks/use-debounce.ts
 export function useDebounce<T>(value: T, delay: number): T {
-  const [debouncedValue, setDebouncedValue] = useState(value);
+    const [debouncedValue, setDebouncedValue] = useState(value);
 
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedValue(value);
-    }, delay);
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            setDebouncedValue(value);
+        }, delay);
 
-    return () => clearTimeout(handler);
-  }, [value, delay]);
+        return () => clearTimeout(handler);
+    }, [value, delay]);
 
-  return debouncedValue;
+    return debouncedValue;
 }
 ```
 
@@ -485,12 +480,12 @@ Example:
 import { cn } from '@/lib/utils';
 
 <button
-  className={cn(
-    'px-4 py-2 rounded',
-    isActive && 'bg-blue-500 text-white',
-    isDisabled && 'opacity-50 cursor-not-allowed'
-  )}
-/>
+    className={cn(
+        'rounded px-4 py-2',
+        isActive && 'bg-blue-500 text-white',
+        isDisabled && 'cursor-not-allowed opacity-50',
+    )}
+/>;
 ```
 
 ### Mobile-First Design
@@ -509,15 +504,15 @@ Start with mobile styles, add modifiers for larger screens:
 
 ### Commit Messages
 
-Format: `[Phase{N}] type: short description`
+Format: `type: short description`
 
 Types: `feat`, `fix`, `docs`, `style`, `refactor`, `chore`
 
 ```bash
 # GOOD
-git commit -m "[Phase1] feat: add Stock model with relationships"
-git commit -m "[Phase1] fix: handle null balance in user accessor"
-git commit -m "[Phase1] docs: add database design documentation"
+git commit -m "feat: add Stock model with relationships"
+git commit -m "fix: handle null balance in user accessor"
+git commit -m "docs: add database design documentation"
 
 # BAD
 git commit -m "update"
@@ -540,21 +535,27 @@ chore/upgrade-laravel-11
 
 ```markdown
 ## What
+
 Brief description of changes
 
 ## Why
+
 Reason for the changes
 
 ## How
+
 Approach taken
 
 ## Verification
+
 How to verify manually
 
 ## Screenshots (if UI)
+
 [attach]
 
 ## Checklist
+
 - [ ] Linter passes
 - [ ] Manual verification done
 - [ ] Documentation updated (if needed)

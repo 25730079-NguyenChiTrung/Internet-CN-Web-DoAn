@@ -22,7 +22,6 @@ The application follows a server-rendered SPA architecture using Laravel as the 
 - Middleware (request filtering, authorization)
 - Database migrations and seeders
 - Service container (dependency injection)
-- Queue system (planned for Phase 3+)
 
 ### MySQL 8
 
@@ -99,7 +98,7 @@ The application follows a server-rendered SPA architecture using Laravel as the 
 **Alternatives considered**:
 
 - Chart.js: Not React-idiomatic
-- Lightweight Charts: Specialized for financial data but adds complexity beyond Phase 1 needs
+- Lightweight Charts: Specialized for financial data but adds complexity
 - D3: Powerful but overkill
 
 ## Forms & Validation
@@ -189,7 +188,7 @@ For development and demo, the application runs locally with:
 - **XAMPP** (provides PHP 8.2+, MySQL 8, Apache, and phpMyAdmin in one installer)
 - **Node.js 20 LTS** (for Vite and pnpm)
 
-Team members access phpMyAdmin at **http://localhost/phpmyadmin** after starting Apache and MySQL in the XAMPP Control Panel.
+Team members access phpMyAdmin at **<http://localhost/phpmyadmin>** after starting Apache and MySQL in the XAMPP Control Panel.
 
 For production demo, deployment options:
 
