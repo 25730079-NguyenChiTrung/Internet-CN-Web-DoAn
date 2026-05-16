@@ -12,6 +12,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             StockSeeder::class,
             PriceHistorySeeder::class,
+            PortfolioSeeder::class,
+            TransactionSeeder::class,
         ]);
     }
 }

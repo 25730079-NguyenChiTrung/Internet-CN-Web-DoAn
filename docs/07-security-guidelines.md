@@ -426,33 +426,20 @@ $total = $totalCents / 100;
 Use database transactions for any operation that modifies multiple rows:
 
 ```php
-public function buy(User $user, Stock $stock, int $quantity): Transaction
+public function deposit(DepositRequest $request, User $user): RedirectResponse
 {
-    return DB::transaction(function () use ($user, $stock, $quantity) {
-        // 1. Lock user row for update
+    return DB::transaction(function () use ($request, $user) {
+        // Lock user row to prevent race conditions (e.g., concurrent admin deposits)
         $user = User::lockForUpdate()->find($user->id);
 
-        // 2. Verify balance
-        $total = $stock->current_price * $quantity;
-        if ($user->balance < $total) {
-            throw new InsufficientBalanceException();
-        }
-
-        // 3. Deduct balance
-        $user->decrement('balance', $total);
-
-        // 4. Create transaction
-        $transaction = Transaction::create([...]);
-
-        // 5. Update portfolio
-        // ...
-
-        return $transaction;
+        // Use BCMath for precise decimal arithmetic
+        $user->balance = bcadd((string) $user->balance, (string) $request->validated('amount'), 2);
+        $user->save();
     });
 }
 ```
 
-Without transactions, partial failures can leave data inconsistent (e.g., balance deducted but no transaction record).
+Without transactions, partial failures can leave data inconsistent.
 
 ## Logging Security Events
 

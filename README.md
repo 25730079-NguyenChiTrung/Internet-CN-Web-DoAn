@@ -1,6 +1,6 @@
 # Stock Trading Website
 
-A simulated stock trading platform built as the final project for the Internet & Web Technology course (IE104) at the University of Information Technology (UIT). The application provides a paper-trading environment — users browse Vietnamese stocks, analyze price charts, and execute simulated buy/sell orders with virtual funds. Administrators manage stock listings and user accounts through a dedicated panel.
+A stock browsing and portfolio management platform built as the final project for the Internet & Web Technology course (IE104) at the University of Information Technology (UIT). Users browse Vietnamese stocks, analyze price charts, manage a personal watchlist, and view their portfolio and transaction history. Administrators manage stock listings and user accounts through a dedicated panel.
 
 ## Tech Stack
 
@@ -39,14 +39,14 @@ Open **http://localhost:8000**
 
 All passwords are `password`.
 
-| Email            | Role          | Balance       | Notes                                        |
-| ---------------- | ------------- | ------------- | -------------------------------------------- |
-| admin@uit.edu.vn | Admin         | —             | Full admin panel access. Cannot trade.       |
-| user1@uit.edu.vn | User          | 100,000,000 ₫ | Standard account for general testing.        |
-| user2@uit.edu.vn | User          | 50,000,000 ₫  | Low balance — test insufficient funds.       |
-| user3@uit.edu.vn | User          | 200,000,000 ₫ | High balance — test large orders.            |
-| user4@uit.edu.vn | User          | 0 ₫           | Zero balance — every buy should be rejected. |
-| user5@uit.edu.vn | User (locked) | 75,000,000 ₫  | Login returns "Tài khoản đã bị khóa".        |
+| Email            | Role          | Balance       | Notes                                         |
+| ---------------- | ------------- | ------------- | --------------------------------------------- |
+| admin@uit.edu.vn | Admin         | —             | Full admin panel access.                      |
+| user1@uit.edu.vn | User          | 100,000,000 ₫ | Standard account — has portfolio and history. |
+| user2@uit.edu.vn | User          | 50,000,000 ₫  | Low balance — minimal holdings.               |
+| user3@uit.edu.vn | User          | 200,000,000 ₫ | High balance — larger portfolio.              |
+| user4@uit.edu.vn | User          | 0 ₫           | Zero balance — useful for empty state tests.  |
+| user5@uit.edu.vn | User (locked) | 75,000,000 ₫  | Login returns "Tài khoản đã bị khóa".         |
 
 ## Documentation
 
@@ -64,12 +64,12 @@ All passwords are `password`.
 
 Each feature module has its own task file with business requirements, acceptance criteria, and implementation hints:
 
-| Module                       | File                                                                               |
-| ---------------------------- | ---------------------------------------------------------------------------------- |
-| M1: Admin Stocks CRUD        | [docs/tasks/M1-admin-stocks-crud.md](docs/tasks/M1-admin-stocks-crud.md)           |
-| M2: Admin Users Management   | [docs/tasks/M2-admin-users-management.md](docs/tasks/M2-admin-users-management.md) |
-| M3: User Stocks Browser      | [docs/tasks/M3-user-stocks-browser.md](docs/tasks/M3-user-stocks-browser.md)       |
-| M4: User Trading & Portfolio | [docs/tasks/M4-user-trading-portfolio.md](docs/tasks/M4-user-trading-portfolio.md) |
+| Module                         | File                                                                               |
+| ------------------------------ | ---------------------------------------------------------------------------------- |
+| M1: Admin Stocks CRUD          | [docs/tasks/M1-admin-stocks-crud.md](docs/tasks/M1-admin-stocks-crud.md)           |
+| M2: Admin Users Management     | [docs/tasks/M2-admin-users-management.md](docs/tasks/M2-admin-users-management.md) |
+| M3: User Stocks Browser        | [docs/tasks/M3-user-stocks-browser.md](docs/tasks/M3-user-stocks-browser.md)       |
+| M4: User Portfolio & Watchlist | [docs/tasks/M4-user-trading-portfolio.md](docs/tasks/M4-user-trading-portfolio.md) |
 
 See [docs/tasks/README.md](docs/tasks/README.md) for module overview and coordination notes.
 

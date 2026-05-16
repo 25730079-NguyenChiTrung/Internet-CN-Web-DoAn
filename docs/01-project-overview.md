@@ -16,8 +16,8 @@ Provide a realistic yet safe environment for understanding equity trading workfl
 
 - User registration, authentication, and role-based access (User, Admin)
 - Stock catalog with detailed pages and historical price charts
-- Simulated buy/sell order placement with fee calculation
 - Portfolio management with profit/loss tracking
+- Watchlist to track stocks of interest
 - Transaction history with filtering
 - Administrative interfaces for stock and user management
 - Responsive design (mobile, tablet, desktop)
@@ -35,68 +35,66 @@ Provide a realistic yet safe environment for understanding equity trading workfl
 
 ## Stakeholders
 
-| Role | Responsibility |
-|------|----------------|
+| Role                | Responsibility                                               |
+| ------------------- | ------------------------------------------------------------ |
 | End User (Investor) | Uses the platform to learn trading, manage virtual portfolio |
-| Administrator | Manages stock listings, user accounts, monitors system |
-| Development Team | Builds, maintains, and deploys the application |
-| Faculty Reviewer | Evaluates the academic deliverable |
+| Administrator       | Manages stock listings, user accounts, monitors system       |
+| Development Team    | Builds, maintains, and deploys the application               |
+| Faculty Reviewer    | Evaluates the academic deliverable                           |
 
 ## Functional Requirements
 
 ### User-facing Capabilities
 
 1. **Account Management**
-   - Register with email and password
-   - Login with credentials, with session persistence
-   - Reset forgotten password via email
-   - Update profile information
-   - View current account balance
+    - Register with email and password
+    - Login with credentials, with session persistence
+    - Reset forgotten password via email
+    - Update profile information
+    - View current account balance
 
 2. **Stock Discovery**
-   - Browse complete catalog of listed stocks
-   - Search by symbol or company name
-   - Filter by industry sector or exchange
-   - Sort by price, percentage change, or volume
+    - Browse complete catalog of listed stocks
+    - Search by symbol or company name
+    - Filter by industry sector or exchange
+    - Sort by price, percentage change, or volume
 
 3. **Stock Analysis**
-   - View detailed company information
-   - View 30-day historical price chart
-   - View current bid/ask metrics
+    - View detailed company information
+    - View 30-day historical price chart
+    - View current price metrics
 
-4. **Trading**
-   - Place buy orders specifying quantity
-   - Place sell orders specifying quantity (limited to holdings)
-   - View real-time order confirmation
-   - Receive feedback on insufficient balance/holdings
+4. **Watchlist**
+    - Add stocks to a personal watchlist
+    - Remove stocks from watchlist
+    - Quick access to tracked securities
 
 5. **Portfolio Management**
-   - View current holdings with quantity, average price, market value
-   - View aggregate profit/loss
-   - View allocation breakdown
+    - View current holdings with quantity, average price, market value
+    - View aggregate profit/loss
+    - View allocation breakdown
 
 6. **Transaction History**
-   - View all past transactions
-   - Filter by date range, transaction type
-   - Export capability (optional)
+    - View all past transactions
+    - Filter by date range, transaction type
 
 ### Administrative Capabilities
 
 1. **Stock Management**
-   - Create new stock listings with metadata
-   - Update stock information and prices
-   - Soft-delete inactive stocks
-   - Bulk operations (optional)
+    - Create new stock listings with metadata
+    - Update stock information and prices
+    - Soft-delete inactive stocks
+    - Bulk operations (optional)
 
 2. **User Management**
-   - View all registered users
-   - View individual user profile and activity
-   - Lock or unlock user accounts
-   - Adjust user balances (credit virtual funds)
+    - View all registered users
+    - View individual user profile and activity
+    - Lock or unlock user accounts
+    - Adjust user balances (credit virtual funds)
 
 3. **Reporting**
-   - View aggregate statistics (total users, total transactions, total volume)
-   - View recent activity
+    - View aggregate statistics (total users, total transactions, total volume)
+    - View recent activity
 
 ## Non-Functional Requirements
 
@@ -118,7 +116,7 @@ Provide a realistic yet safe environment for understanding equity trading workfl
 
 ### Reliability
 
-- Database transactions ensure atomicity for trading operations
+- Database transactions ensure atomicity for multi-step operations
 - Error logging for diagnostics
 - Graceful error messages to end users
 
@@ -150,15 +148,15 @@ The project succeeds when:
 
 ## Glossary
 
-| Term | Definition |
-|------|-----------|
-| **Paper Trading** | Simulated trading with virtual currency for educational purposes |
-| **Symbol** | A short code identifying a publicly-traded security (e.g., VNM, FPT) |
-| **Portfolio** | Collection of securities held by a user |
-| **Position** | A specific holding of one security in a portfolio |
-| **Lot** | Standard trading unit; in Vietnamese markets, 100 shares per lot |
-| **Average Cost** | Weighted average price paid for a position |
-| **P&L** | Profit and Loss; difference between current market value and cost basis |
-| **HOSE** | Ho Chi Minh City Stock Exchange |
-| **HNX** | Hanoi Stock Exchange |
-| **UPCOM** | Unlisted Public Company Market |
+| Term              | Definition                                                              |
+| ----------------- | ----------------------------------------------------------------------- |
+| **Paper Trading** | Simulated trading with virtual currency for educational purposes        |
+| **Symbol**        | A short code identifying a publicly-traded security (e.g., VNM, FPT)    |
+| **Portfolio**     | Collection of securities held by a user                                 |
+| **Position**      | A specific holding of one security in a portfolio                       |
+| **Lot**           | Standard trading unit; in Vietnamese markets, 100 shares per lot        |
+| **Average Cost**  | Weighted average price paid for a position                              |
+| **P&L**           | Profit and Loss; difference between current market value and cost basis |
+| **HOSE**          | Ho Chi Minh City Stock Exchange                                         |
+| **HNX**           | Hanoi Stock Exchange                                                    |
+| **UPCOM**         | Unlisted Public Company Market                                          |

@@ -2,24 +2,24 @@
 
 ## Overview
 
-Module xem cổ phiếu — public lẫn authenticated. Cho phép mọi người (kể cả chưa đăng nhập) browse danh sách mã CK dạng card, và user đã đăng nhập xem chi tiết từng mã với biểu đồ giá 30 ngày và form đặt lệnh. Module này là "cửa ngõ" để user khám phá thị trường trước khi giao dịch.
+Module xem cổ phiếu — public lẫn authenticated. Cho phép mọi người (kể cả chưa đăng nhập) browse danh sách mã CK dạng card, và user đã đăng nhập xem chi tiết từng mã với biểu đồ giá 30 ngày và nút theo dõi watchlist. Module này là "cửa ngõ" để user khám phá thị trường.
 
 ## How This Module Fits with Others
 
 Project có 4 modules phát triển song song:
 
-| Module                       | Focus                       |
-| ---------------------------- | --------------------------- |
-| M1: Admin Stocks CRUD        | Quản lý mã CK (admin)       |
-| M2: Admin Users Management   | Quản lý người dùng (admin)  |
-| M3: User Stocks Browser      | Xem CK + chart (user)       |
-| M4: User Trading & Portfolio | Đặt lệnh + portfolio (user) |
+| Module                         | Focus                                  |
+| ------------------------------ | -------------------------------------- |
+| M1: Admin Stocks CRUD          | Quản lý mã CK (admin)                  |
+| M2: Admin Users Management     | Quản lý người dùng (admin)             |
+| M3: User Stocks Browser        | Xem CK + chart (user)                  |
+| M4: User Portfolio & Watchlist | Portfolio + lịch sử + watchlist (user) |
 
 **Module này** tương tác với module khác như sau:
 
 - Đọc data từ bảng `stocks` (M1 quản lý) và `price_histories` để hiển thị chart.
-- **Provide order form UI** cho M4: trang stock detail có form đặt lệnh mua/bán, nhưng logic xử lý submission (validate balance, tạo transaction) là trách nhiệm của M4.
-- Coordinate với M4 owner về tên fields trong form và submission URL (`/trading/buy`, `/trading/sell`).
+- **Cột phải của stock detail** hiển thị nút "Theo dõi / Bỏ theo dõi" — M3 render UI, M4 xử lý logic watchlist.
+- Coordinate với M4 owner về prop `watchlist_id` (number | null) và submission URL (`POST /watchlist`, `DELETE /watchlist/{id}`).
 
 ## Prerequisites — Đọc trước khi bắt đầu
 
@@ -126,24 +126,20 @@ Trang chi tiết một mã CK. Layout 2 cột trên desktop, 1 cột trên mobil
 - **Biểu đồ giá 30 ngày** (Recharts `LineChart`): trục X là ngày, trục Y là giá, có tooltip khi hover, đường màu xanh smooth. Data từ `price_histories` sort theo `date ASC`.
 - Tabs: "Mô tả công ty" / "Thống kê cơ bản"
 
-**Cột phải (order form)**:
+**Cột phải (watchlist panel)**:
 
-- Nếu user **chưa đăng nhập**: CTA "Đăng nhập để giao dịch" kèm link đến `/login`
-- Nếu user **đã đăng nhập** và stock active:
-    - Hiển thị balance hiện tại của user
-    - Nếu user đang nắm giữ mã này: "Bạn đang sở hữu X cổ phiếu (avg: Y ₫)"
-    - **Order form** với 2 tabs "Mua" / "Bán":
-        - Input: số lượng (bội số 100, tối thiểu 100)
-        - Hiển thị: Giá × Số lượng = Subtotal, Fee (0.15%), Total
-        - Nút submit (logic submit là của M4 — form POST đến `/trading/buy` hoặc `/trading/sell`)
-- Nếu stock **inactive**: thông báo "Mã CK này tạm ngưng giao dịch"
+- Nếu user **chưa đăng nhập**: CTA "Đăng nhập để theo dõi mã này" kèm link đến `/login`
+- Nếu user **đã đăng nhập**:
+    - Nút toggle: nếu `watchlist_id === null` → hiển thị "Theo dõi" (POST `/watchlist`); nếu có giá trị → hiển thị "Đang theo dõi" (DELETE `/watchlist/{watchlist_id}`)
+    - Có thể hiển thị thêm thông tin tóm tắt: giá hiện tại, % thay đổi, market cap (nếu có)
+- Nếu stock **inactive**: hiển thị badge "Tạm ngưng" bên cạnh tên
 
 **Acceptance Criteria**:
 
 - [ ] Chart load đúng data 30 ngày, có tooltip
 - [ ] Mobile responsive (1 cột)
-- [ ] Order form UI hoàn chỉnh (fields, estimated total, fee)
-- [ ] Guest thấy CTA login thay vì form
+- [ ] Guest thấy CTA đăng nhập thay vì nút Theo dõi
+- [ ] Nút Theo dõi toggle đúng theo trạng thái `watchlist_id`
 - [ ] Inactive stock hiển thị thông báo phù hợp
 
 **Gợi ý implementation**:
@@ -155,16 +151,16 @@ public function show(string $symbol): Response
         ->with(['priceHistories' => fn ($q) => $q->orderBy('date')->limit(30)])
         ->firstOrFail();
 
-    $portfolio = null;
+    $watchlistId = null;
     if (auth()->check()) {
-        $portfolio = auth()->user()->portfolios()
+        $watchlistId = auth()->user()->watchlists()
             ->where('stock_id', $stock->id)
-            ->first();
+            ->value('id');
     }
 
     return Inertia::render('Stocks/Show', [
-        'stock'     => $stock,
-        'portfolio' => $portfolio,
+        'stock'        => $stock,
+        'watchlist_id' => $watchlistId,  // null = chưa theo dõi
     ]);
 }
 ```
@@ -192,9 +188,9 @@ Có thể dùng:
 
 ## Lưu ý
 
-- ⚠️ Trang `/stocks` là **PUBLIC** — không require auth middleware. Nhưng order form trong detail page chỉ hiển thị khi user đã đăng nhập.
+- ⚠️ Trang `/stocks` là **PUBLIC** — không require auth middleware. Nhưng nút Theo dõi chỉ hiển thị khi user đã đăng nhập.
 - ⚠️ Data chart từ `price_histories` của 30 ngày gần nhất, sort theo `date ASC`.
-- ⚠️ **Coordinate với M4 owner** về tên fields trong order form (`stock_id`, `quantity`, `type`) và submission URL (`/trading/buy`, `/trading/sell`). Thống nhất trước khi implement.
+- ⚠️ **Coordinate với M4 owner** về prop `watchlist_id` (number | null) và submission URL (`POST /watchlist`, `DELETE /watchlist/{id}`). Thống nhất trước khi implement.
 - ⚠️ Tránh N+1: luôn dùng `with('priceHistories')` khi load stock detail.
 - ⚠️ Dùng `Stock::active()` scope để lọc chỉ hiển thị mã đang hoạt động trong danh sách.
 
