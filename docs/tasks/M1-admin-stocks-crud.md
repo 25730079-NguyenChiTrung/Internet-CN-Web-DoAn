@@ -8,12 +8,12 @@ Module quản lý cổ phiếu cho admin. Cho phép admin thêm/xem/sửa/xóa m
 
 Project có 4 modules phát triển song song:
 
-| Module                       | Focus                       |
-| ---------------------------- | --------------------------- |
-| M1: Admin Stocks CRUD        | Quản lý mã CK (admin)       |
-| M2: Admin Users Management   | Quản lý người dùng (admin)  |
-| M3: User Stocks Browser      | Xem CK + chart (user)       |
-| M4: User Trading & Portfolio | Đặt lệnh + portfolio (user) |
+| Module                         | Focus                                  |
+| ------------------------------ | -------------------------------------- |
+| M1: Admin Stocks CRUD          | Quản lý mã CK (admin)                  |
+| M2: Admin Users Management     | Quản lý người dùng (admin)             |
+| M3: User Stocks Browser        | Xem CK + chart (user)                  |
+| M4: User Portfolio & Watchlist | Portfolio + lịch sử + watchlist (user) |
 
 **Module này** tương tác với module khác như sau:
 
@@ -241,7 +241,7 @@ PATCH /admin/stocks/{id}/toggle-active
 **Mô tả nghiệp vụ**:
 Admin tạm ngưng hoặc bật lại mã CK mà không cần xóa. Khi `is_active = false`:
 
-- User không thể đặt lệnh mua/bán mã đó.
+- Mã CK hiển thị badge "Tạm ngưng" trên trang danh sách và chi tiết.
 - Mã vẫn hiển thị trong danh sách với badge "Tạm ngưng".
 - Lịch sử giao dịch cũ vẫn còn nguyên.
 

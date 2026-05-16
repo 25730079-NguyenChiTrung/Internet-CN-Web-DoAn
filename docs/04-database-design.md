@@ -150,7 +150,7 @@ Catalog of available securities.
 
 ### transactions
 
-Append-only ledger of all buy/sell operations.
+Ledger of all historical stock transactions (read-only after creation).
 
 | Column      | Type            | Constraints                 | Description                           |
 | ----------- | --------------- | --------------------------- | ------------------------------------- |
@@ -180,14 +180,14 @@ Append-only ledger of all buy/sell operations.
 
 **Business Rules**:
 
-- Records are append-only (status updates allowed, content never modified)
+- Records are append-only (content immutable after creation)
 - Quantity must be positive
-- Total = quantity × price (enforced at application level)
-- Fee is 0.15% of total (calculated at application level)
+- Total = quantity × price
+- Fee is 0.15% of total
 
 ### portfolios
 
-Current holdings per user. Updated by trading operations.
+Current holdings per user (populated via seeder for demo).
 
 | Column     | Type            | Constraints        | Description           |
 | ---------- | --------------- | ------------------ | --------------------- |
@@ -212,8 +212,34 @@ Current holdings per user. Updated by trading operations.
 **Business Rules**:
 
 - One row per user/stock combination
-- When quantity reaches 0, the row is deleted (not kept at 0)
-- avg_price is the weighted average cost (recalculated on each buy)
+- avg_price is the weighted average cost
+
+### watchlists
+
+User's personal stock watchlist.
+
+| Column     | Type            | Constraints        | Description             |
+| ---------- | --------------- | ------------------ | ----------------------- |
+| id         | BIGINT UNSIGNED | PK, AUTO_INCREMENT | Primary key             |
+| user_id    | BIGINT UNSIGNED | FK, NOT NULL       | References users.id     |
+| stock_id   | BIGINT UNSIGNED | FK, NOT NULL       | References stocks.id    |
+| created_at | TIMESTAMP       | NULL               | When added to watchlist |
+| updated_at | TIMESTAMP       | NULL               | Last update time        |
+
+**Indexes**:
+
+- PRIMARY (id)
+- UNIQUE (user_id, stock_id) — one entry per user/stock pair
+
+**Foreign Keys**:
+
+- user_id → users.id (ON DELETE CASCADE)
+- stock_id → stocks.id (ON DELETE CASCADE)
+
+**Business Rules**:
+
+- One row per user/stock combination
+- Adding duplicate is idempotent (use `firstOrCreate`)
 
 ### price_histories
 
@@ -246,23 +272,23 @@ Daily historical price snapshots for charting.
 
 | From   | To              | Cardinality | Description                        |
 | ------ | --------------- | ----------- | ---------------------------------- |
-| users  | transactions    | 1:N         | A user makes many transactions     |
+| users  | transactions    | 1:N         | A user has many transactions       |
 | users  | portfolios      | 1:N         | A user holds many positions        |
+| users  | watchlists      | 1:N         | A user tracks many stocks          |
 | stocks | transactions    | 1:N         | A stock has many transactions      |
 | stocks | portfolios      | 1:N         | A stock appears in many portfolios |
+| stocks | watchlists      | 1:N         | A stock is watched by many users   |
 | stocks | price_histories | 1:N         | A stock has many daily prices      |
 
 ## Data Integrity Rules
 
 ### Application-Level Constraints
 
-These are enforced in the application code (Services, Form Requests) since they cannot be enforced purely by the database:
+These are enforced in the application code (Form Requests) since they cannot be enforced purely by the database:
 
-1. **Balance ≥ 0**: User's `balance` cannot go negative.
-2. **Quantity multiples of 100**: Trading quantities follow Vietnamese lot sizes.
-3. **Sell ≤ Holdings**: Cannot sell more than owned.
-4. **Active stock for trades**: Cannot trade inactive stocks.
-5. **Active user for trades**: Inactive users cannot trade.
+1. **Active user**: Inactive users (`is_active = false`) cannot log in.
+2. **Watchlist uniqueness**: Adding a duplicate watchlist entry is idempotent (use `firstOrCreate`).
+3. **Watchlist ownership**: Only the owner can delete their watchlist entry.
 
 ### Database-Level Constraints
 
@@ -281,6 +307,7 @@ Due to foreign key dependencies, migrations must run in this order:
 3. `create_transactions_table` (depends on users, stocks)
 4. `create_portfolios_table` (depends on users, stocks)
 5. `create_price_histories_table` (depends on stocks)
+6. `create_watchlists_table` (depends on users, stocks)
 
 Plus auxiliary tables from Laravel defaults:
 
@@ -291,11 +318,13 @@ Plus auxiliary tables from Laravel defaults:
 
 The `DatabaseSeeder` populates initial data:
 
-| Seeder             | Records                     | Purpose           |
-| ------------------ | --------------------------- | ----------------- |
-| UserSeeder         | 1 admin + 5 users           | Demo accounts     |
-| StockSeeder        | 20 Vietnamese stocks        | Realistic catalog |
-| PriceHistorySeeder | ~600 entries (20 × 30 days) | Chart data        |
+| Seeder             | Records                     | Purpose                  |
+| ------------------ | --------------------------- | ------------------------ |
+| UserSeeder         | 1 admin + 5 users           | Demo accounts            |
+| StockSeeder        | 20 Vietnamese stocks        | Realistic catalog        |
+| PriceHistorySeeder | ~600 entries (20 × 30 days) | Chart data               |
+| PortfolioSeeder    | Holdings for user1, user3   | Demo portfolio display   |
+| TransactionSeeder  | ~7 historical transactions  | Demo transaction history |
 
 ## Performance Considerations
 

@@ -20,13 +20,13 @@ Always use type hints for parameters, return types, and properties:
 
 ```php
 // GOOD
-public function buy(User $user, Stock $stock, int $quantity): Transaction
+public function store(WatchlistRequest $request): RedirectResponse
 {
     // ...
 }
 
 // BAD
-public function buy($user, $stock, $quantity)
+public function store($request)
 {
     // ...
 }
@@ -38,22 +38,21 @@ Use constructor property promotion (PHP 8.0+):
 
 ```php
 // GOOD
-class TradingService
+class WatchlistController extends Controller
 {
     public function __construct(
-        private readonly WalletService $walletService,
         private readonly LoggerInterface $logger,
     ) {}
 }
 
 // BAD
-class TradingService
+class WatchlistController extends Controller
 {
-    private WalletService $walletService;
+    private LoggerInterface $logger;
 
-    public function __construct(WalletService $walletService)
+    public function __construct(LoggerInterface $logger)
     {
-        $this->walletService = $walletService;
+        $this->logger = $logger;
     }
 }
 ```
@@ -64,7 +63,7 @@ Mark properties as `readonly` when they shouldn't change after construction:
 
 ```php
 public function __construct(
-    private readonly TradingService $tradingService,
+    private readonly StockService $stockService,
 ) {}
 ```
 
@@ -74,10 +73,10 @@ Use named arguments for clarity in calls with multiple parameters of similar typ
 
 ```php
 // GOOD
-$service->buy(user: $user, stock: $stock, quantity: 100);
+$service->addToWatchlist(user: $user, stock: $stock);
 
 // BAD (positional, less readable)
-$service->buy($user, $stock, 100);
+$service->addToWatchlist($user, $stock);
 ```
 
 ### Models
@@ -133,25 +132,27 @@ class Stock extends Model
 Keep controllers thin. Delegate to services for business logic.
 
 ```php
-class TradingController extends Controller
+class WatchlistController extends Controller
 {
-    public function __construct(
-        private readonly TradingService $tradingService,
-    ) {}
-
-    public function buy(PlaceOrderRequest $request, Stock $stock): RedirectResponse
+    public function store(WatchlistRequest $request): RedirectResponse
     {
-        try {
-            $this->tradingService->buy(
-                user: $request->user(),
-                stock: $stock,
-                quantity: $request->validated('quantity'),
-            );
+        auth()->user()->watchlists()->firstOrCreate([
+            'stock_id' => $request->validated('stock_id'),
+        ]);
 
-            return back()->with('success', 'Đặt lệnh thành công');
-        } catch (InvalidArgumentException $e) {
-            return back()->with('error', $e->getMessage())->withInput();
+        return back()->with('success', 'Đã thêm vào danh sách theo dõi');
+    }
+
+    public function destroy(Watchlist $watchlist): RedirectResponse
+    {
+        if ($watchlist->user_id !== auth()->id()) {
+            abort(403);
         }
+
+        $watchlist->delete();
+
+        return redirect()->route('watchlist.index')
+            ->with('success', 'Đã xóa khỏi danh sách theo dõi');
     }
 }
 ```
@@ -161,27 +162,25 @@ class TradingController extends Controller
 Every endpoint that receives input has a Form Request:
 
 ```php
-class PlaceOrderRequest extends FormRequest
+class WatchlistRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user() !== null && $this->user()->is_active;
+        return $this->user() !== null;
     }
 
     public function rules(): array
     {
         return [
-            'quantity' => ['required', 'integer', 'min:100', 'multiple_of:100'],
+            'stock_id' => ['required', 'integer', 'exists:stocks,id'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'quantity.required' => 'Vui lòng nhập số lượng',
-            'quantity.integer' => 'Số lượng phải là số nguyên',
-            'quantity.min' => 'Số lượng tối thiểu là 100',
-            'quantity.multiple_of' => 'Số lượng phải là bội số của 100',
+            'stock_id.required' => 'Vui lòng chọn mã cổ phiếu',
+            'stock_id.exists' => 'Mã cổ phiếu không tồn tại',
         ];
     }
 }
@@ -192,17 +191,13 @@ class PlaceOrderRequest extends FormRequest
 Wrap multi-step operations in transactions:
 
 ```php
-return DB::transaction(function () use ($user, $stock, $quantity) {
+return DB::transaction(function () use ($user, $amount) {
     // Step 1
-    $this->walletService->debit($user, $total);
+    $user = User::lockForUpdate()->find($user->id);
 
     // Step 2
-    $transaction = Transaction::create([...]);
-
-    // Step 3
-    $this->updatePortfolio($user, $stock, $quantity);
-
-    return $transaction;
+    $user->balance = bcadd((string) $user->balance, (string) $amount, 2);
+    $user->save();
 });
 ```
 
@@ -212,10 +207,7 @@ Throw specific exceptions, not generic ones:
 
 ```php
 // GOOD
-throw new InsufficientBalanceException('Số dư không đủ');
-
-// ACCEPTABLE
-throw new InvalidArgumentException('Số dư không đủ');
+throw new InvalidArgumentException('Mã cổ phiếu không tồn tại');
 
 // BAD (too generic)
 throw new Exception('Error');
@@ -227,20 +219,19 @@ Comment WHY, not WHAT:
 
 ```php
 // BAD: redundant
-// Increment quantity
-$quantity++;
+// Delete watchlist entry
+$watchlist->delete();
 
 // GOOD: explains reasoning
-// Vietnamese market requires lot size of 100; round up to next multiple
-$quantity = ceil($requestedQuantity / 100) * 100;
+// Xóa hẳn row thay vì set flag — row tồn tại đồng nghĩa với "đang theo dõi"
+$watchlist->delete();
 ```
 
 Use Vietnamese for business logic explanations:
 
 ```php
-// Tính giá trung bình theo công thức Weighted Average Cost
-// avg_new = (avg_old * qty_old + price * qty_new) / (qty_old + qty_new)
-$newAvgPrice = ...;
+// Tính P&L: market value - cost basis (dùng BCMath để tránh float rounding)
+$pnlAmount = bcsub($marketValue, $costBasis, 2);
 ```
 
 Use English for technical/structural notes:
@@ -569,16 +560,12 @@ Use docblocks for public APIs of classes and complex functions:
 
 ```php
 /**
- * Process a buy order for the user.
+ * Add a stock to the user's watchlist (idempotent).
  *
- * Atomically:
- * 1. Debits user's balance
- * 2. Creates transaction record
- * 3. Updates portfolio with new weighted average price
- *
- * @throws InvalidArgumentException If quantity invalid or insufficient balance
+ * Uses firstOrCreate so calling this multiple times with the same stock
+ * is safe — no duplicate entries, no error.
  */
-public function buy(User $user, Stock $stock, int $quantity): Transaction
+public function store(WatchlistRequest $request): RedirectResponse
 {
     // ...
 }

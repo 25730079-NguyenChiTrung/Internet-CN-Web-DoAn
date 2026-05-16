@@ -4,16 +4,16 @@ Mỗi module thuộc về 1 thành viên, chịu trách nhiệm cả backend và
 
 ## Module Assignments
 
-| Module                                                         | Description                 | Complexity |
-| -------------------------------------------------------------- | --------------------------- | ---------- |
-| [M1: Admin Stocks CRUD](./M1-admin-stocks-crud.md)             | Quản lý mã CK (admin)       | ⭐⭐⭐     |
-| [M2: Admin Users Management](./M2-admin-users-management.md)   | Quản lý người dùng (admin)  | ⭐⭐       |
-| [M3: User Stocks Browser](./M3-user-stocks-browser.md)         | Xem CK + chart (user)       | ⭐⭐⭐     |
-| [M4: User Trading & Portfolio](./M4-user-trading-portfolio.md) | Đặt lệnh + portfolio (user) | ⭐⭐⭐⭐   |
+| Module                                                           | Description                            | Complexity |
+| ---------------------------------------------------------------- | -------------------------------------- | ---------- |
+| [M1: Admin Stocks CRUD](./M1-admin-stocks-crud.md)               | Quản lý mã CK (admin)                  | ⭐⭐⭐     |
+| [M2: Admin Users Management](./M2-admin-users-management.md)     | Quản lý người dùng (admin)             | ⭐⭐       |
+| [M3: User Stocks Browser](./M3-user-stocks-browser.md)           | Xem CK + chart (user)                  | ⭐⭐⭐     |
+| [M4: User Portfolio & Watchlist](./M4-user-trading-portfolio.md) | Portfolio + lịch sử + watchlist (user) | ⭐⭐⭐     |
 
 ## Module Dependencies
 
-- **M4 phụ thuộc M3**: M4 cần order form UI từ stock detail page của M3. M3 expose placeholder form trước, M4 wire up backend logic.
+- **M4 ↔ M3**: M4 cung cấp endpoint watchlist, M3 render nút "Theo dõi / Bỏ theo dõi" trên stock detail. Hai bên cần thống nhất về prop `watchlist_id` trước khi implement.
 - Các module khác phát triển song song.
 
 ## Shared Files Coordination

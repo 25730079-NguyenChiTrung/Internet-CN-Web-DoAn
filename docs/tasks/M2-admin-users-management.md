@@ -8,12 +8,12 @@ Module quản lý người dùng cho admin. Admin xem danh sách tất cả user
 
 Project có 4 modules phát triển song song:
 
-| Module                       | Focus                       |
-| ---------------------------- | --------------------------- |
-| M1: Admin Stocks CRUD        | Quản lý mã CK (admin)       |
-| M2: Admin Users Management   | Quản lý người dùng (admin)  |
-| M3: User Stocks Browser      | Xem CK + chart (user)       |
-| M4: User Trading & Portfolio | Đặt lệnh + portfolio (user) |
+| Module                         | Focus                                  |
+| ------------------------------ | -------------------------------------- |
+| M1: Admin Stocks CRUD          | Quản lý mã CK (admin)                  |
+| M2: Admin Users Management     | Quản lý người dùng (admin)             |
+| M3: User Stocks Browser        | Xem CK + chart (user)                  |
+| M4: User Portfolio & Watchlist | Portfolio + lịch sử + watchlist (user) |
 
 **Module này** tương tác với module khác như sau:
 

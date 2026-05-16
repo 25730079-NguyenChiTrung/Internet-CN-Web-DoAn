@@ -63,8 +63,8 @@ app/
 │   │   ├── PortfolioController.php
 │   │   ├── ProfileController.php
 │   │   ├── StockController.php                # Public stock listing
-│   │   ├── TradingController.php
-│   │   └── TransactionController.php
+│   │   ├── TransactionController.php
+│   │   └── WatchlistController.php
 │   ├── Middleware/
 │   │   ├── EnsureUserIsAdmin.php              # Admin gate
 │   │   ├── HandleAppearance.php
@@ -84,8 +84,8 @@ app/
 ├── Providers/
 │   ├── AppServiceProvider.php
 │   └── AuthServiceProvider.php
-└── Services/                                  # Business logic (added in later phases)
-    └── (TradingService, PortfolioService, etc.)
+└── Services/                                  # Business logic (extract here when controllers grow)
+    └── (WatchlistService, etc. — add as needed)
 ```
 
 ## Database Layer (`database/`)
@@ -102,11 +102,14 @@ database/
 │   ├── 2025_xx_xx_create_stocks_table.php
 │   ├── 2025_xx_xx_create_transactions_table.php
 │   ├── 2025_xx_xx_create_portfolios_table.php
-│   └── 2025_xx_xx_create_price_histories_table.php
+│   ├── 2025_xx_xx_create_price_histories_table.php
+│   └── 2025_xx_xx_create_watchlists_table.php
 └── seeders/
     ├── DatabaseSeeder.php                     # Orchestrator
+    ├── PortfolioSeeder.php
     ├── PriceHistorySeeder.php
     ├── StockSeeder.php
+    ├── TransactionSeeder.php
     └── UserSeeder.php
 ```
 
@@ -142,6 +145,7 @@ resources/js/
 │   ├── Portfolio.tsx
 │   ├── Profile.tsx
 │   ├── Transactions.tsx
+│   ├── Watchlist.tsx
 │   └── Welcome.tsx
 ├── components/                                # Reusable components (kebab-case)
 │   ├── ui/                                    # shadcn/ui components
@@ -308,17 +312,19 @@ public/
 
 Each module is owned by one team member, responsible for both backend and frontend.
 
-| Path                                             | Module                       |
-| ------------------------------------------------ | ---------------------------- |
-| `app/Http/Controllers/Admin/StockController.php` | M1: Admin Stocks CRUD        |
-| `resources/js/Pages/Admin/Stocks/*`              | M1: Admin Stocks CRUD        |
-| `app/Http/Controllers/Admin/UserController.php`  | M2: Admin Users Management   |
-| `resources/js/Pages/Admin/Users/*`               | M2: Admin Users Management   |
-| `app/Http/Controllers/StockController.php`       | M3: User Stocks Browser      |
-| `resources/js/Pages/Stocks/*`                    | M3: User Stocks Browser      |
-| `app/Http/Controllers/TradingController.php`     | M4: User Trading & Portfolio |
-| `app/Http/Controllers/PortfolioController.php`   | M4: User Trading & Portfolio |
-| `resources/js/Pages/Portfolio.tsx`               | M4: User Trading & Portfolio |
-| `resources/js/Pages/Transactions.tsx`            | M4: User Trading & Portfolio |
+| Path                                             | Module                         |
+| ------------------------------------------------ | ------------------------------ |
+| `app/Http/Controllers/Admin/StockController.php` | M1: Admin Stocks CRUD          |
+| `resources/js/Pages/Admin/Stocks/*`              | M1: Admin Stocks CRUD          |
+| `app/Http/Controllers/Admin/UserController.php`  | M2: Admin Users Management     |
+| `resources/js/Pages/Admin/Users/*`               | M2: Admin Users Management     |
+| `app/Http/Controllers/StockController.php`       | M3: User Stocks Browser        |
+| `resources/js/Pages/Stocks/*`                    | M3: User Stocks Browser        |
+| `app/Http/Controllers/PortfolioController.php`   | M4: User Portfolio & Watchlist |
+| `app/Http/Controllers/TransactionController.php` | M4: User Portfolio & Watchlist |
+| `app/Http/Controllers/WatchlistController.php`   | M4: User Portfolio & Watchlist |
+| `resources/js/Pages/Portfolio.tsx`               | M4: User Portfolio & Watchlist |
+| `resources/js/Pages/Transactions.tsx`            | M4: User Portfolio & Watchlist |
+| `resources/js/Pages/Watchlist.tsx`               | M4: User Portfolio & Watchlist |
 
 See `docs/tasks/README.md` for full module descriptions and task details.

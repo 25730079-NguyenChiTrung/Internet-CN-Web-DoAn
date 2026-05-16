@@ -50,9 +50,9 @@ Examples:
 
 ```
 feat: add stock create form with validation
-fix: handle empty portfolio state on sell
+fix: handle empty portfolio state in watchlist
 refactor: extract pagination logic to hook
-docs: add jsdoc to TradingService
+docs: add jsdoc to WatchlistController
 chore: add Prettier config for Tailwind class sorting
 ```
 
@@ -103,7 +103,7 @@ Quick rules:
 - ❌ Disable ESLint/TypeScript errors thay vì fix
 - ❌ Dùng `any` type trong TypeScript
 - ❌ Dùng raw SQL queries (dùng Eloquent)
-- ❌ Dùng `*`, `+`, `-`, `/` cho money (dùng BCMath)
+- ❌ Dùng `*`, `+`, `-`, `/` cho tính toán tiền/giá (dùng BCMath)
 - ❌ Skip Form Request validation
 - ❌ Logic phức tạp trong Controller (delegate sang Service)
 

@@ -67,7 +67,7 @@ Hoặc tạo thủ công qua phpMyAdmin (`http://localhost/phpmyadmin`):
 php artisan migrate:fresh --seed
 ```
 
-Lệnh này drop toàn bộ bảng, tạo lại từ đầu và seed demo data: 1 admin + 5 users, 20 mã CK Việt Nam, và 30 ngày lịch sử giá cho mỗi mã.
+Lệnh này drop toàn bộ bảng, tạo lại từ đầu và seed demo data: 1 admin + 5 users, 20 mã CK Việt Nam, 30 ngày lịch sử giá cho mỗi mã, cùng portfolio và lịch sử giao dịch mẫu.
 
 ## Bước 6: Chạy dev servers
 
@@ -106,11 +106,11 @@ Sau khi `migrate:fresh --seed`, các tài khoản sau sẵn sàng. Mật khẩu 
 
 | Email            | Role  | Balance       | Ghi chú                                       |
 | ---------------- | ----- | ------------- | --------------------------------------------- |
-| admin@uit.edu.vn | Admin | —             | Toàn quyền admin panel, không trading         |
-| user1@uit.edu.vn | User  | 100,000,000 ₫ | Tài khoản standard, dùng để test chung        |
-| user2@uit.edu.vn | User  | 50,000,000 ₫  | Balance thấp — test insufficient funds        |
-| user3@uit.edu.vn | User  | 200,000,000 ₫ | Balance cao — test large orders               |
-| user4@uit.edu.vn | User  | 0 ₫           | Zero balance — mọi lệnh mua phải reject       |
+| admin@uit.edu.vn | Admin | —             | Toàn quyền admin panel                        |
+| user1@uit.edu.vn | User  | 100,000,000 ₫ | Tài khoản standard, có portfolio và lịch sử   |
+| user2@uit.edu.vn | User  | 50,000,000 ₫  | Balance thấp, holdings tối thiểu              |
+| user3@uit.edu.vn | User  | 200,000,000 ₫ | Balance cao, portfolio lớn hơn                |
+| user4@uit.edu.vn | User  | 0 ₫           | Zero balance, không có holdings               |
 | user5@uit.edu.vn | User  | 75,000,000 ₫  | Bị khóa — login trả về "Tài khoản đã bị khóa" |
 
 ---
