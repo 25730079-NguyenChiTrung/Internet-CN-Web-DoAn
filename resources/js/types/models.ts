@@ -64,6 +64,15 @@ export interface Portfolio {
     stock?: Stock;
 }
 
+export interface Watchlist {
+    id: number;
+    user_id: number;
+    stock_id: number;
+    created_at: string;
+    updated_at: string;
+    stock?: Stock;
+}
+
 export interface PriceHistory {
     id: number;
     stock_id: number;

@@ -71,6 +71,11 @@ class Stock extends Model
         return $this->hasMany(PriceHistory::class);
     }
 
+    public function watchlists(): HasMany
+    {
+        return $this->hasMany(Watchlist::class);
+    }
+
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
