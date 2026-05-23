@@ -6,6 +6,7 @@ import {
     TrendingUp,
     Briefcase,
     ClipboardList,
+    Star,
     ChevronDown,
     LogOut,
     User,
@@ -31,6 +32,7 @@ const navItems = [
     { href: '/stocks', label: 'Cổ phiếu', icon: TrendingUp },
     { href: '/portfolio', label: 'Danh mục', icon: Briefcase },
     { href: '/transactions', label: 'Giao dịch', icon: ClipboardList },
+    { href: '/watchlist', label: 'Theo dõi', icon: Star },
 ];
 
 export default function AppLayout({ children }: AppLayoutProps) {
