@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Head, router } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import {
     ArrowDown,
     ArrowUp,
     ArrowUpDown,
     Eye,
     Pencil,
+    Plus,
     Power,
     Search,
     Trash2,
@@ -147,6 +148,14 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                 title="Quản lý cổ phiếu"
                 description="Theo dõi, tìm kiếm và quản lý trạng thái các mã cổ phiếu niêm yết"
                 breadcrumbs={[{ label: 'Dashboard', href: '/admin' }, { label: 'Cổ phiếu' }]}
+                actions={
+                    <Button asChild>
+                        <Link href="/admin/stocks/create">
+                            <Plus className="h-4 w-4" />
+                            Thêm mã CK
+                        </Link>
+                    </Button>
+                }
             />
 
             <div className="space-y-4">

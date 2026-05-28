@@ -31,6 +31,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/stocks', [AdminStockController::class, 'index'])->name('stocks.index');
+    Route::get('/stocks/create', [AdminStockController::class, 'create'])->name('stocks.create');
+    Route::post('/stocks', [AdminStockController::class, 'store'])->name('stocks.store');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
 });
 

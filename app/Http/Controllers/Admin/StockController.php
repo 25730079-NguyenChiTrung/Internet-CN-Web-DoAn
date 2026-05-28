@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreStockRequest;
 use App\Models\Stock;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -72,5 +74,30 @@ class StockController extends Controller
                 'direction' => $direction,
             ],
         ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('Admin/Stocks/Create', [
+            'sectors' => StoreStockRequest::SECTORS,
+            'exchanges' => ['HOSE', 'HNX', 'UPCOM'],
+        ]);
+    }
+
+    public function store(StoreStockRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        unset($validated['logo']);
+
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('stocks/logos', 'public');
+            $validated['logo_url'] = "/storage/{$path}";
+        }
+
+        $stock = Stock::create($validated);
+
+        return redirect()
+            ->route('admin.stocks.index')
+            ->with('success', "Đã thêm mã CK {$stock->symbol}");
     }
 }
