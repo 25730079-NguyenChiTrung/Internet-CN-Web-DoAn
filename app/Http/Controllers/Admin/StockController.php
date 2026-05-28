@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreStockRequest;
+use App\Http\Requests\UpdateStockRequest;
 use App\Models\Stock;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -99,5 +101,62 @@ class StockController extends Controller
         return redirect()
             ->route('admin.stocks.index')
             ->with('success', "Đã thêm mã CK {$stock->symbol}");
+    }
+
+    public function edit(Stock $stock): Response
+    {
+        return Inertia::render('Admin/Stocks/Edit', [
+            'stock' => [
+                'id' => $stock->id,
+                'symbol' => $stock->symbol,
+                'company_name' => $stock->company_name,
+                'sector' => $stock->sector,
+                'exchange' => $stock->exchange,
+                'current_price' => (float) $stock->current_price,
+                'previous_close' => (float) $stock->previous_close,
+                'description' => $stock->description,
+                'logo_url' => $stock->logo_url,
+                'is_active' => $stock->is_active,
+                'change_percent' => $stock->change_percent,
+                'trend' => $stock->trend,
+                'deleted_at' => $stock->deleted_at,
+                'created_at' => $stock->created_at,
+                'updated_at' => $stock->updated_at,
+            ],
+            'sectors' => StoreStockRequest::SECTORS,
+            'exchanges' => ['HOSE', 'HNX', 'UPCOM'],
+        ]);
+    }
+
+    public function update(UpdateStockRequest $request, Stock $stock): RedirectResponse
+    {
+        $validated = $request->validated();
+        unset($validated['logo']);
+
+        $oldLogoUrl = $stock->logo_url;
+
+        if ($request->hasFile('logo')) {
+            $path = $request->file('logo')->store('stocks/logos', 'public');
+            $validated['logo_url'] = "/storage/{$path}";
+        }
+
+        $stock->update($validated);
+
+        if (isset($validated['logo_url'])) {
+            $this->deleteManagedLogo($oldLogoUrl);
+        }
+
+        return redirect()
+            ->route('admin.stocks.index')
+            ->with('success', "Đã cập nhật mã CK {$stock->symbol}");
+    }
+
+    private function deleteManagedLogo(?string $logoUrl): void
+    {
+        if (! $logoUrl || ! str_starts_with($logoUrl, '/storage/stocks/logos/')) {
+            return;
+        }
+
+        Storage::disk('public')->delete(str_replace('/storage/', '', $logoUrl));
     }
 }

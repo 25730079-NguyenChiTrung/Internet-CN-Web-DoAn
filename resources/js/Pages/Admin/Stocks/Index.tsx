@@ -296,15 +296,14 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                                                 >
                                                     <Eye className="h-4 w-4" />
                                                 </Button>
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    disabled
-                                                    aria-label={`Sửa ${stock.symbol}`}
-                                                    title="Sửa sẽ triển khai sau"
-                                                >
-                                                    <Pencil className="h-4 w-4" />
+                                                <Button variant="ghost" size="icon" asChild>
+                                                    <Link
+                                                        href={`/admin/stocks/${stock.id}/edit`}
+                                                        aria-label={`Sửa ${stock.symbol}`}
+                                                        title={`Sửa ${stock.symbol}`}
+                                                    >
+                                                        <Pencil className="h-4 w-4" />
+                                                    </Link>
                                                 </Button>
                                                 <Button
                                                     type="button"
