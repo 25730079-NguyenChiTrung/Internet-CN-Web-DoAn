@@ -151,6 +151,19 @@ class StockController extends Controller
             ->with('success', "Đã cập nhật mã CK {$stock->symbol}");
     }
 
+    public function toggleActive(Stock $stock): RedirectResponse
+    {
+        $stock->update([
+            'is_active' => ! $stock->is_active,
+        ]);
+
+        $message = $stock->is_active
+            ? "Đã kích hoạt mã CK {$stock->symbol}"
+            : "Đã tạm ngưng mã CK {$stock->symbol}";
+
+        return back()->with('success', $message);
+    }
+
     private function deleteManagedLogo(?string $logoUrl): void
     {
         if (! $logoUrl || ! str_starts_with($logoUrl, '/storage/stocks/logos/')) {

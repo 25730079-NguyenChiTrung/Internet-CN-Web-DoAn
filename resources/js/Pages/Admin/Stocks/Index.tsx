@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 
 import AdminLayout from '@/layouts/admin-layout';
+import { ConfirmDialog } from '@/components/shared/confirm-dialog';
 import { EmptyState } from '@/components/shared/empty-state';
 import { PageHeader } from '@/components/shared/page-header';
 import { PriceChange } from '@/components/shared/price-change';
@@ -78,6 +79,8 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
     const [status, setStatus] = useState<StatusFilter>(
         filters.status === '' ? 'all' : filters.status,
     );
+    const [toggleStock, setToggleStock] = useState<Stock | null>(null);
+    const [toggleProcessing, setToggleProcessing] = useState(false);
     const debouncedSearch = useDebounce(search, 350);
     const hasFilters = Boolean(filters.search || filters.status);
 
@@ -138,6 +141,23 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
             '/admin/stocks',
             {},
             { preserveScroll: true, preserveState: true, replace: true },
+        );
+    };
+
+    const confirmToggleActive = () => {
+        if (!toggleStock) {
+            return;
+        }
+
+        router.patch(
+            `/admin/stocks/${toggleStock.id}/toggle-active`,
+            {},
+            {
+                preserveScroll: true,
+                onStart: () => setToggleProcessing(true),
+                onSuccess: () => setToggleStock(null),
+                onFinish: () => setToggleProcessing(false),
+            },
         );
     };
 
@@ -309,9 +329,14 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                                                     type="button"
                                                     variant="ghost"
                                                     size="icon"
-                                                    disabled
+                                                    disabled={toggleProcessing}
+                                                    onClick={() => setToggleStock(stock)}
                                                     aria-label={`Chuyển trạng thái ${stock.symbol}`}
-                                                    title="Toggle active sẽ triển khai sau"
+                                                    title={
+                                                        stock.is_active
+                                                            ? `Tạm ngưng ${stock.symbol}`
+                                                            : `Kích hoạt ${stock.symbol}`
+                                                    }
                                                 >
                                                     <Power className="h-4 w-4" />
                                                 </Button>
@@ -380,6 +405,29 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                     </div>
                 </div>
             </div>
+
+            <ConfirmDialog
+                open={Boolean(toggleStock)}
+                onOpenChange={(open) => {
+                    if (!open && !toggleProcessing) {
+                        setToggleStock(null);
+                    }
+                }}
+                title={
+                    toggleStock?.is_active
+                        ? `Tạm ngưng mã CK ${toggleStock.symbol}?`
+                        : `Kích hoạt mã CK ${toggleStock?.symbol ?? ''}?`
+                }
+                description={
+                    toggleStock?.is_active
+                        ? 'Mã CK vẫn hiển thị trong danh sách và lịch sử giao dịch cũ được giữ nguyên, nhưng người dùng sẽ không thể giao dịch mã này.'
+                        : 'Mã CK sẽ được bật lại để người dùng có thể giao dịch bình thường.'
+                }
+                confirmLabel={toggleStock?.is_active ? 'Tạm ngưng' : 'Kích hoạt'}
+                onConfirm={confirmToggleActive}
+                loading={toggleProcessing}
+                variant={toggleStock?.is_active ? 'destructive' : 'default'}
+            />
         </AdminLayout>
     );
 }
