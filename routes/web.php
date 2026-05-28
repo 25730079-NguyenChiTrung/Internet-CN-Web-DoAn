@@ -36,6 +36,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::patch('/stocks/{stock}/toggle-active', [AdminStockController::class, 'toggleActive'])->name('stocks.toggle-active');
     Route::get('/stocks/{stock}/edit', [AdminStockController::class, 'edit'])->name('stocks.edit');
     Route::put('/stocks/{stock}', [AdminStockController::class, 'update'])->name('stocks.update');
+    Route::delete('/stocks/{stock}', [AdminStockController::class, 'destroy'])->name('stocks.destroy');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
 });
 

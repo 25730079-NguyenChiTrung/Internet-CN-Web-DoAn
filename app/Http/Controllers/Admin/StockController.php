@@ -164,6 +164,24 @@ class StockController extends Controller
         return back()->with('success', $message);
     }
 
+    public function destroy(Stock $stock): RedirectResponse
+    {
+        if ($stock->transactions()->exists()) {
+            return back()->with(
+                'error',
+                'Không thể xóa mã CK đã có giao dịch. Hãy chuyển sang trạng thái Inactive thay thế.'
+            );
+        }
+
+        $symbol = $stock->symbol;
+
+        $stock->delete();
+
+        return redirect()
+            ->route('admin.stocks.index')
+            ->with('success', "Đã xóa mã CK {$symbol}");
+    }
+
     private function deleteManagedLogo(?string $logoUrl): void
     {
         if (! $logoUrl || ! str_starts_with($logoUrl, '/storage/stocks/logos/')) {

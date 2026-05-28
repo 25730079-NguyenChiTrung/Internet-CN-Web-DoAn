@@ -81,6 +81,8 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
     );
     const [toggleStock, setToggleStock] = useState<Stock | null>(null);
     const [toggleProcessing, setToggleProcessing] = useState(false);
+    const [deleteStock, setDeleteStock] = useState<Stock | null>(null);
+    const [deleteProcessing, setDeleteProcessing] = useState(false);
     const debouncedSearch = useDebounce(search, 350);
     const hasFilters = Boolean(filters.search || filters.status);
 
@@ -159,6 +161,19 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                 onFinish: () => setToggleProcessing(false),
             },
         );
+    };
+
+    const confirmDelete = () => {
+        if (!deleteStock) {
+            return;
+        }
+
+        router.delete(`/admin/stocks/${deleteStock.id}`, {
+            preserveScroll: true,
+            onStart: () => setDeleteProcessing(true),
+            onSuccess: () => setDeleteStock(null),
+            onFinish: () => setDeleteProcessing(false),
+        });
     };
 
     return (
@@ -329,7 +344,7 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                                                     type="button"
                                                     variant="ghost"
                                                     size="icon"
-                                                    disabled={toggleProcessing}
+                                                    disabled={toggleProcessing || deleteProcessing}
                                                     onClick={() => setToggleStock(stock)}
                                                     aria-label={`Chuyển trạng thái ${stock.symbol}`}
                                                     title={
@@ -344,9 +359,10 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                                                     type="button"
                                                     variant="ghost"
                                                     size="icon"
-                                                    disabled
+                                                    disabled={toggleProcessing || deleteProcessing}
+                                                    onClick={() => setDeleteStock(stock)}
                                                     aria-label={`Xóa ${stock.symbol}`}
-                                                    title="Xóa sẽ triển khai sau"
+                                                    title={`Xóa ${stock.symbol}`}
                                                 >
                                                     <Trash2 className="h-4 w-4" />
                                                 </Button>
@@ -427,6 +443,21 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                 onConfirm={confirmToggleActive}
                 loading={toggleProcessing}
                 variant={toggleStock?.is_active ? 'destructive' : 'default'}
+            />
+
+            <ConfirmDialog
+                open={Boolean(deleteStock)}
+                onOpenChange={(open) => {
+                    if (!open && !deleteProcessing) {
+                        setDeleteStock(null);
+                    }
+                }}
+                title={`Xóa mã CK ${deleteStock?.symbol ?? ''}?`}
+                description="Mã CK chưa có giao dịch sẽ được xóa khỏi danh sách quản trị. Nếu mã CK đã có giao dịch, hệ thống sẽ giữ lại dữ liệu và yêu cầu chuyển sang trạng thái Inactive thay thế."
+                confirmLabel="Xóa"
+                onConfirm={confirmDelete}
+                loading={deleteProcessing}
+                variant="destructive"
             />
         </AdminLayout>
     );
