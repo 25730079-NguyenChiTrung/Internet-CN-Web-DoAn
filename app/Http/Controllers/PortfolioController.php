@@ -37,10 +37,15 @@ class PortfolioController extends Controller
         $totalCost = array_reduce($holdingsArray, fn ($c, $h) => bcadd($c, $h['cost_basis'], 2), '0.00');
         $totalPnl = bcsub($totalValue, $totalCost, 2);
 
+        $balance     = (string) Auth::user()->balance;
+        $totalAssets = bcadd($totalValue, $balance, 2);
+
         $summary = [
-            'total_value' => $totalValue,
-            'total_cost' => $totalCost,
-            'total_pnl' => $totalPnl,
+            'total_value'  => $totalValue,
+            'total_cost'   => $totalCost,
+            'total_pnl'    => $totalPnl,
+            'balance'      => $balance,
+            'total_assets' => $totalAssets,
         ];
 
         return Inertia::render('Portfolio', compact('holdings', 'summary'));

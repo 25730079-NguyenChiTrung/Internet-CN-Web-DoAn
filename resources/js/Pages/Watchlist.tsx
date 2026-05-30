@@ -4,6 +4,7 @@ import { Star, Trash2 } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { PageHeader } from '@/components/shared/page-header';
 import { EmptyState } from '@/components/shared/empty-state';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Table,
@@ -21,7 +22,8 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { formatCurrency, formatPercent } from '@/lib/format';
+import { ConfirmDialog } from '@/components/shared/confirm-dialog';
+import { formatCurrency, formatDateTime, formatPercent } from '@/lib/format';
 import { cn } from '@/lib/utils';
 import type { Watchlist, Stock } from '@/types/models';
 
@@ -32,6 +34,7 @@ interface Props {
 
 export default function WatchlistPage({ watchlists, stocks }: Props) {
     const [selectedStock, setSelectedStock] = useState<string>('');
+    const [pendingDeleteId, setPendingDeleteId] = useState<number | null>(null);
 
     const watchedIds = new Set(watchlists.map((w) => w.stock_id));
     const availableStocks = stocks.filter((s) => !watchedIds.has(s.id));
@@ -46,8 +49,7 @@ export default function WatchlistPage({ watchlists, stocks }: Props) {
     }
 
     function handleDelete(id: number) {
-        if (!confirm('Bạn có chắc muốn xóa cổ phiếu này khỏi danh sách theo dõi?')) return;
-        router.delete(`/watchlist/${id}`);
+        setPendingDeleteId(id);
     }
 
     return (
@@ -98,9 +100,10 @@ export default function WatchlistPage({ watchlists, stocks }: Props) {
                             <TableRow>
                                 <TableHead>Symbol</TableHead>
                                 <TableHead>Công ty</TableHead>
-                                <TableHead>Ngành</TableHead>
+                                <TableHead>Sàn</TableHead>
                                 <TableHead className="text-right">Giá hiện tại</TableHead>
                                 <TableHead className="text-right">% Thay đổi</TableHead>
+                                <TableHead>Ngày thêm</TableHead>
                                 <TableHead className="w-16" />
                             </TableRow>
                         </TableHeader>
@@ -115,8 +118,8 @@ export default function WatchlistPage({ watchlists, stocks }: Props) {
                                             {stock.symbol}
                                         </TableCell>
                                         <TableCell>{stock.company_name}</TableCell>
-                                        <TableCell className="text-muted-foreground">
-                                            {stock.sector ?? '—'}
+                                        <TableCell>
+                                            <Badge variant="secondary">{stock.exchange}</Badge>
                                         </TableCell>
                                         <TableCell className="text-right font-medium">
                                             {formatCurrency(stock.current_price)}
@@ -129,6 +132,9 @@ export default function WatchlistPage({ watchlists, stocks }: Props) {
                                             )}
                                         >
                                             {formatPercent(stock.change_percent)}
+                                        </TableCell>
+                                        <TableCell className="text-muted-foreground">
+                                            {formatDateTime(item.created_at)}
                                         </TableCell>
                                         <TableCell>
                                             <Button
@@ -147,6 +153,20 @@ export default function WatchlistPage({ watchlists, stocks }: Props) {
                     </Table>
                 </div>
             )}
+            <ConfirmDialog
+                open={pendingDeleteId !== null}
+                onOpenChange={(open) => {
+                    if (!open) setPendingDeleteId(null);
+                }}
+                title="Xóa khỏi danh sách theo dõi"
+                description="Bạn có chắc muốn xóa cổ phiếu này khỏi danh sách theo dõi?"
+                confirmLabel="Xóa"
+                variant="destructive"
+                onConfirm={() => {
+                    if (pendingDeleteId !== null) router.delete(`/watchlist/${pendingDeleteId}`);
+                    setPendingDeleteId(null);
+                }}
+            />
         </AppLayout>
     );
 }

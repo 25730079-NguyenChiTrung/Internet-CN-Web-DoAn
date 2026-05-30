@@ -1,8 +1,9 @@
-import { Head } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Briefcase, TrendingDown, TrendingUp } from 'lucide-react';
 import AppLayout from '@/layouts/app-layout';
 import { PageHeader } from '@/components/shared/page-header';
 import { EmptyState } from '@/components/shared/empty-state';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
     Table,
@@ -28,6 +29,8 @@ interface Summary {
     total_value: string;
     total_cost: string;
     total_pnl: string;
+    balance: string;
+    total_assets: string;
 }
 
 interface Props {
@@ -39,6 +42,12 @@ export default function PortfolioPage({ holdings, summary }: Props) {
     const totalPnlPositive = !summary.total_pnl.startsWith('-') && summary.total_pnl !== '0.00';
     const totalPnlNegative = summary.total_pnl.startsWith('-');
 
+    const totalCostNum = parseFloat(summary.total_cost);
+    const totalPnlPct =
+        totalCostNum !== 0
+            ? ((parseFloat(summary.total_pnl) / totalCostNum) * 100).toFixed(4)
+            : '0.0000';
+
     return (
         <AppLayout>
             <Head title="Danh mục đầu tư" />
@@ -49,21 +58,31 @@ export default function PortfolioPage({ holdings, summary }: Props) {
             />
 
             {/* Summary Cards */}
-            <div className="mb-6 grid gap-4 sm:grid-cols-3">
+            <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Giá trị danh mục
+                            Tổng tài sản
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-2xl font-bold">{formatCurrency(summary.total_value)}</p>
+                        <p className="text-2xl font-bold">{formatCurrency(summary.total_assets)}</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Chi phí đầu tư
+                            Cash khả dụng
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <p className="text-2xl font-bold">{formatCurrency(summary.balance)}</p>
+                    </CardContent>
+                </Card>
+                <Card>
+                    <CardHeader className="pb-2">
+                        <CardTitle className="text-sm font-medium text-muted-foreground">
+                            Tổng vốn đầu tư
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -73,7 +92,7 @@ export default function PortfolioPage({ holdings, summary }: Props) {
                 <Card>
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm font-medium text-muted-foreground">
-                            Lãi / Lỗ chưa thực hiện
+                            P&amp;L tổng
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -87,6 +106,15 @@ export default function PortfolioPage({ holdings, summary }: Props) {
                             {totalPnlPositive && <TrendingUp className="h-5 w-5" />}
                             {totalPnlNegative && <TrendingDown className="h-5 w-5" />}
                             {formatCurrency(summary.total_pnl)}
+                        </p>
+                        <p
+                            className={cn(
+                                'text-sm font-medium',
+                                totalPnlPositive && 'text-green-600',
+                                totalPnlNegative && 'text-red-600',
+                            )}
+                        >
+                            {formatPercent(totalPnlPct)}
                         </p>
                     </CardContent>
                 </Card>
@@ -111,6 +139,7 @@ export default function PortfolioPage({ holdings, summary }: Props) {
                                 <TableHead className="text-right">Giá trị</TableHead>
                                 <TableHead className="text-right">Lãi/Lỗ</TableHead>
                                 <TableHead className="text-right">%</TableHead>
+                                <TableHead>Hành động</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -154,6 +183,13 @@ export default function PortfolioPage({ holdings, summary }: Props) {
                                             )}
                                         >
                                             {formatPercent(h.pnl_percent)}
+                                        </TableCell>
+                                        <TableCell>
+                                            <Link href={`/stocks/${h.stock.symbol}`}>
+                                                <Button variant="outline" size="sm">
+                                                    Xem chi tiết
+                                                </Button>
+                                            </Link>
                                         </TableCell>
                                     </TableRow>
                                 );

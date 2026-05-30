@@ -13,7 +13,8 @@ class TransactionController extends Controller
     {
         $type = $request->query('type');
         $status = $request->query('status');
-        $search = $request->query('search');
+        $date_from = $request->query('date_from');
+        $date_to   = $request->query('date_to');
 
         $type = in_array($type, ['buy', 'sell']) ? $type : null;
         $status = in_array($status, ['pending', 'completed', 'cancelled']) ? $status : null;
@@ -21,7 +22,7 @@ class TransactionController extends Controller
         $query = Auth::user()
             ->transactions()
             ->with('stock')
-            ->latest('executed_at');
+            ->latest('created_at');
 
         if ($type) {
             $query->where('type', $type);
@@ -31,11 +32,12 @@ class TransactionController extends Controller
             $query->where('status', $status);
         }
 
-        if ($search) {
-            $query->whereHas('stock', function ($q) use ($search) {
-                $q->where('symbol', 'like', "%{$search}%")
-                    ->orWhere('company_name', 'like', "%{$search}%");
-            });
+        if ($date_from) {
+            $query->whereDate('created_at', '>=', $date_from);
+        }
+
+        if ($date_to) {
+            $query->whereDate('created_at', '<=', $date_to);
         }
 
         $paginator = $query->paginate(20)->withQueryString();
@@ -58,7 +60,7 @@ class TransactionController extends Controller
             ],
         ];
 
-        $filters = compact('type', 'status', 'search');
+        $filters = compact('type', 'status', 'date_from', 'date_to');
 
         return Inertia::render('Transactions', compact('transactions', 'filters'));
     }

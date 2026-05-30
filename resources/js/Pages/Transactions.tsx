@@ -30,7 +30,8 @@ type TransactionRow = Transaction & { stock: Stock };
 interface Filters {
     type: string | null;
     status: string | null;
-    search: string | null;
+    date_from: string | null;
+    date_to: string | null;
 }
 
 interface Props {
@@ -46,7 +47,8 @@ function applyFilter(filters: Filters) {
         {
             type: filters.type ?? undefined,
             status: filters.status ?? undefined,
-            search: filters.search ?? undefined,
+            date_from: filters.date_from ?? undefined,
+            date_to: filters.date_to ?? undefined,
         },
         { preserveState: true, replace: true },
     );
@@ -55,7 +57,6 @@ function applyFilter(filters: Filters) {
 export default function TransactionsPage({ transactions, filters }: Props) {
     const currentType = filters.type ?? ALL;
     const currentStatus = filters.status ?? ALL;
-    const currentSearch = filters.search ?? '';
 
     function handleTypeChange(value: string) {
         applyFilter({ ...filters, type: value === ALL ? null : value });
@@ -65,9 +66,12 @@ export default function TransactionsPage({ transactions, filters }: Props) {
         applyFilter({ ...filters, status: value === ALL ? null : value });
     }
 
-    function handleSearchChange(e: React.ChangeEvent<HTMLInputElement>) {
-        const search = e.target.value || null;
-        applyFilter({ ...filters, search });
+    function handleDateFromChange(e: React.ChangeEvent<HTMLInputElement>) {
+        applyFilter({ ...filters, date_from: e.target.value || null });
+    }
+
+    function handleDateToChange(e: React.ChangeEvent<HTMLInputElement>) {
+        applyFilter({ ...filters, date_to: e.target.value || null });
     }
 
     const { data, meta, links } = transactions;
@@ -107,10 +111,16 @@ export default function TransactionsPage({ transactions, filters }: Props) {
                 </Select>
 
                 <Input
-                    className="w-56"
-                    placeholder="Tìm theo mã / công ty..."
-                    defaultValue={currentSearch}
-                    onChange={handleSearchChange}
+                    type="date"
+                    className="w-40"
+                    value={filters.date_from ?? ''}
+                    onChange={handleDateFromChange}
+                />
+                <Input
+                    type="date"
+                    className="w-40"
+                    value={filters.date_to ?? ''}
+                    onChange={handleDateToChange}
                 />
             </div>
 
@@ -119,7 +129,7 @@ export default function TransactionsPage({ transactions, filters }: Props) {
                     icon={<ClipboardList className="h-8 w-8" />}
                     title="Không có giao dịch"
                     description={
-                        filters.type || filters.status || filters.search
+                        filters.type || filters.status || filters.date_from || filters.date_to
                             ? 'Không tìm thấy giao dịch nào phù hợp với bộ lọc.'
                             : 'Lịch sử giao dịch sẽ xuất hiện tại đây sau khi bạn đặt lệnh.'
                     }
