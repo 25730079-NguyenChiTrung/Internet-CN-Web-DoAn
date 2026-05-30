@@ -309,27 +309,39 @@ export default function AdminStocksIndex({ stocks, filters }: Props) {
                                             />
                                         </TableCell>
                                         <TableCell>
-                                            <Badge
-                                                variant={stock.is_active ? 'default' : 'secondary'}
-                                                className={cn(
-                                                    stock.is_active &&
-                                                        'bg-emerald-600 hover:bg-emerald-600/80',
-                                                )}
-                                            >
-                                                {stock.is_active ? 'Hoạt động' : 'Tạm ngưng'}
-                                            </Badge>
+                                            {stock.deleted_at ? (
+                                                <Badge
+                                                    variant="outline"
+                                                    className="text-muted-foreground"
+                                                >
+                                                    Đã xóa
+                                                </Badge>
+                                            ) : (
+                                                <Badge
+                                                    variant={
+                                                        stock.is_active ? 'default' : 'secondary'
+                                                    }
+                                                    className={cn(
+                                                        stock.is_active &&
+                                                            'bg-emerald-600 hover:bg-emerald-600/80',
+                                                    )}
+                                                >
+                                                    {stock.is_active ? 'Hoạt động' : 'Tạm ngưng'}
+                                                </Badge>
+                                            )}
                                         </TableCell>
                                         <TableCell>
                                             <div className="flex justify-end gap-1">
-                                                <Button
-                                                    type="button"
-                                                    variant="ghost"
-                                                    size="icon"
-                                                    disabled
-                                                    aria-label={`Xem ${stock.symbol}`}
-                                                    title="Xem chi tiết sẽ triển khai sau"
-                                                >
-                                                    <Eye className="h-4 w-4" />
+                                                <Button variant="ghost" size="icon" asChild>
+                                                    <Link
+                                                        href={`/stocks/${stock.symbol}`}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        aria-label={`Xem ${stock.symbol}`}
+                                                        title={`Xem ${stock.symbol}`}
+                                                    >
+                                                        <Eye className="h-4 w-4" />
+                                                    </Link>
                                                 </Button>
                                                 <Button variant="ghost" size="icon" asChild>
                                                     <Link

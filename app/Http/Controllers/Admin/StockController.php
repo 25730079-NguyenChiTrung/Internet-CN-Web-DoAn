@@ -20,7 +20,7 @@ class StockController extends Controller
         $sort = $request->string('sort')->toString();
         $direction = $request->string('direction')->toString() === 'desc' ? 'desc' : 'asc';
 
-        $query = Stock::query()
+        $query = Stock::withTrashed()
             ->search($request->string('search')->toString())
             ->when($status === 'active', fn ($query) => $query->where('is_active', true))
             ->when($status === 'inactive', fn ($query) => $query->where('is_active', false));
@@ -174,8 +174,10 @@ class StockController extends Controller
         }
 
         $symbol = $stock->symbol;
+        $logoUrl = $stock->logo_url;
 
         $stock->delete();
+        $this->deleteManagedLogo($logoUrl);
 
         return redirect()
             ->route('admin.stocks.index')

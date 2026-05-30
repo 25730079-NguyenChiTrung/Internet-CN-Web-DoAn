@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateStockRequest extends FormRequest
+class UpdateStockRequest extends BaseFormRequest
 {
     public function authorize(): bool
     {

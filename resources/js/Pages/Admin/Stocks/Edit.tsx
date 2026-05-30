@@ -17,6 +17,8 @@ import {
 import type { InertiaPageProps } from '@/types/inertia';
 import type { Exchange, Stock } from '@/types/models';
 
+const NO_SECTOR_VALUE = '__none__';
+
 interface Props extends InertiaPageProps {
     stock: Stock;
     sectors: string[];
@@ -116,13 +118,16 @@ export default function AdminStocksEdit({ stock, sectors, exchanges }: Props) {
                         <div className="space-y-2">
                             <Label htmlFor="sector">Ngành</Label>
                             <Select
-                                value={data.sector}
-                                onValueChange={(value) => setData('sector', value)}
+                                value={data.sector || NO_SECTOR_VALUE}
+                                onValueChange={(value) =>
+                                    setData('sector', value === NO_SECTOR_VALUE ? '' : value)
+                                }
                             >
                                 <SelectTrigger id="sector" aria-invalid={Boolean(errors.sector)}>
                                     <SelectValue placeholder="Chọn ngành" />
                                 </SelectTrigger>
                                 <SelectContent>
+                                    <SelectItem value={NO_SECTOR_VALUE}>Không có</SelectItem>
                                     {sectors.map((sector) => (
                                         <SelectItem key={sector} value={sector}>
                                             {sector}
