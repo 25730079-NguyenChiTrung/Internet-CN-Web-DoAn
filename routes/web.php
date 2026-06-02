@@ -36,6 +36,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/stocks', [AdminStockController::class, 'index'])->name('stocks.index');
+    Route::get('/stocks/create', [AdminStockController::class, 'create'])->name('stocks.create');
+    Route::post('/stocks', [AdminStockController::class, 'store'])->name('stocks.store');
+    Route::patch('/stocks/{stock}/toggle-active', [AdminStockController::class, 'toggleActive'])->name('stocks.toggle-active');
+    Route::get('/stocks/{stock}/edit', [AdminStockController::class, 'edit'])->name('stocks.edit');
+    Route::put('/stocks/{stock}', [AdminStockController::class, 'update'])->name('stocks.update');
+    Route::delete('/stocks/{stock}', [AdminStockController::class, 'destroy'])->name('stocks.destroy');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
 });
 

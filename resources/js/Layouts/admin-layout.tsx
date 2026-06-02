@@ -1,6 +1,6 @@
-import { type ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { LayoutDashboard, TrendingUp, Users, LogOut, ChevronRight, Menu, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -18,8 +18,18 @@ const sidebarItems = [
 ];
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-    const { auth } = usePage<InertiaPageProps>().props;
+    const { auth, flash } = usePage<InertiaPageProps>().props;
     const user = auth.user;
+
+    useEffect(() => {
+        if (flash.success) {
+            toast.success(flash.success);
+        }
+
+        if (flash.error) {
+            toast.error(flash.error);
+        }
+    }, [flash.error, flash.success]);
 
     return (
         <div className="flex min-h-screen bg-background">
