@@ -6,7 +6,7 @@ import {
     TrendingUp,
     Briefcase,
     ClipboardList,
-    Star,
+    Eye,
     ChevronDown,
     LogOut,
     User,
@@ -21,7 +21,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/format';
-import type { InertiaPageProps } from '@/types/inertia';
+import type { User as UserModel } from '@/types/models';
 
 interface AppLayoutProps {
     children: ReactNode;
@@ -31,13 +31,13 @@ const navItems = [
     { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard },
     { href: '/stocks', label: 'Cổ phiếu', icon: TrendingUp },
     { href: '/portfolio', label: 'Danh mục', icon: Briefcase },
+    { href: '/watchlist', label: 'Watchlist', icon: Eye },
     { href: '/transactions', label: 'Giao dịch', icon: ClipboardList },
-    { href: '/watchlist', label: 'Theo dõi', icon: Star },
 ];
 
 export default function AppLayout({ children }: AppLayoutProps) {
-    const { auth } = usePage<InertiaPageProps>().props;
-    const user = auth.user;
+    const { auth } = usePage().props;
+    const user: UserModel | null = auth.user;
 
     return (
         <div className="min-h-screen bg-background">
@@ -73,8 +73,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         ))}
                     </nav>
 
-                    {/* User Dropdown */}
-                    {user && (
+                    {/* User actions */}
+                    {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="flex items-center gap-2">
@@ -116,6 +116,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <Button variant="ghost" asChild>
+                                <Link href="/login">Đăng nhập</Link>
+                            </Button>
+                            <Button asChild className="hidden sm:inline-flex">
+                                <Link href="/register">Đăng ký</Link>
+                            </Button>
+                        </div>
                     )}
                 </div>
             </header>
