@@ -20,7 +20,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/format';
-import type { InertiaPageProps } from '@/types/inertia';
+import type { GuestPageProps } from '@/types/inertia';
 
 interface AppLayoutProps {
     children: ReactNode;
@@ -34,7 +34,7 @@ const navItems = [
 ];
 
 export default function AppLayout({ children }: AppLayoutProps) {
-    const { auth } = usePage<InertiaPageProps>().props;
+    const { auth } = usePage<GuestPageProps>().props;
     const user = auth.user;
 
     return (
@@ -71,8 +71,8 @@ export default function AppLayout({ children }: AppLayoutProps) {
                         ))}
                     </nav>
 
-                    {/* User Dropdown */}
-                    {user && (
+                    {/* User actions */}
+                    {user ? (
                         <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                                 <Button variant="ghost" className="flex items-center gap-2">
@@ -114,6 +114,15 @@ export default function AppLayout({ children }: AppLayoutProps) {
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <Button variant="ghost" asChild>
+                                <Link href="/login">Đăng nhập</Link>
+                            </Button>
+                            <Button asChild className="hidden sm:inline-flex">
+                                <Link href="/register">Đăng ký</Link>
+                            </Button>
+                        </div>
                     )}
                 </div>
             </header>

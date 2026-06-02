@@ -33,6 +33,17 @@ function CustomTooltip({ active, payload, label }: TooltipProps) {
 }
 
 export function StockChart({ data, height = 200 }: StockChartProps) {
+    if (!data || data.length === 0) {
+        return (
+            <div
+                className="flex items-center justify-center rounded-lg border bg-muted/30 text-sm text-muted-foreground"
+                style={{ height }}
+            >
+                Chưa có dữ liệu giá để hiển thị biểu đồ.
+            </div>
+        );
+    }
+
     const chartData = data.map((item) => ({
         date: item.date,
         price: Number(item.price),
