@@ -85,11 +85,11 @@ Trang hiển thị danh mục đầu tư của user (require auth). Data đượ
 
 **Acceptance Criteria**:
 
-- [ ] Tính P&L chính xác cho từng holding và tổng
-- [ ] Eager load `portfolios.stock` để tránh N+1
-- [ ] Empty state hiển thị khi không có holdings
-- [ ] Số tiền format đúng VND
-- [ ] Responsive
+- [x] Tính P&L chính xác cho từng holding và tổng
+- [x] Eager load `portfolios.stock` để tránh N+1
+- [x] Empty state hiển thị khi không có holdings
+- [x] Số tiền format đúng VND
+- [x] Responsive
 
 **Gợi ý implementation**:
 
@@ -147,11 +147,11 @@ Phân trang 20 mục mỗi trang.
 
 **Acceptance Criteria**:
 
-- [ ] Filters hoạt động qua URL params (bookmarkable)
-- [ ] Sort theo `created_at DESC`
-- [ ] Pagination 20/trang
-- [ ] Eager load `transactions.stock` để tránh N+1
-- [ ] Responsive
+- [x] Filters hoạt động qua URL params (bookmarkable)
+- [x] Sort theo `created_at DESC`
+- [x] Pagination 20/trang
+- [x] Eager load `transactions.stock` để tránh N+1
+- [x] Responsive
 
 ---
 
@@ -264,11 +264,11 @@ return Inertia::render('Stocks/Show', [
 
 **Acceptance Criteria**:
 
-- [ ] Trang `/watchlist` hiển thị danh sách với eager load `.stock`, có empty state
-- [ ] POST `/watchlist` thêm mã — idempotent, không lỗi nếu đã có
-- [ ] DELETE `/watchlist/{id}` verify ownership (403 nếu không phải owner)
-- [ ] Require auth trên tất cả 3 routes
-- [ ] Responsive
+- [x] Trang `/watchlist` hiển thị danh sách với eager load `.stock`, có empty state
+- [x] POST `/watchlist` thêm mã — idempotent, không lỗi nếu đã có
+- [x] DELETE `/watchlist/{id}` verify ownership (403 nếu không phải owner)
+- [x] Require auth trên tất cả 3 routes
+- [x] Responsive
 
 ---
 
