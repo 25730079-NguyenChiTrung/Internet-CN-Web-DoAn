@@ -6,6 +6,7 @@ import {
     TrendingUp,
     Briefcase,
     ClipboardList,
+    Eye,
     ChevronDown,
     LogOut,
     User,
@@ -30,6 +31,7 @@ const navItems = [
     { href: '/dashboard', label: 'Tổng quan', icon: LayoutDashboard },
     { href: '/stocks', label: 'Cổ phiếu', icon: TrendingUp },
     { href: '/portfolio', label: 'Danh mục', icon: Briefcase },
+    { href: '/watchlist', label: 'Watchlist', icon: Eye },
     { href: '/transactions', label: 'Giao dịch', icon: ClipboardList },
 ];
 
