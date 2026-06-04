@@ -73,6 +73,14 @@ return [
             'replace_placeholders' => true,
         ],
 
+        // Audit log riêng cho các hành động nhạy cảm của admin (vd: nạp tiền cho user).
+        'security' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/security.log'),
+            'level' => env('LOG_LEVEL', 'debug'),
+            'replace_placeholders' => true,
+        ],
+
         'slack' => [
             'driver' => 'slack',
             'url' => env('LOG_SLACK_WEBHOOK_URL'),
