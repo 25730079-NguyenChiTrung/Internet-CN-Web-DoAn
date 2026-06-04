@@ -90,10 +90,6 @@ export default function Welcome() {
                         ))}
                     </div>
                 </section>
-
-                <footer className="border-t py-6 text-center text-sm text-muted-foreground">
-                    <p>© 2025 Stock Trading — Đồ án IE104 UIT. Chỉ dành cho mục đích học tập.</p>
-                </footer>
             </div>
         </>
     );
