@@ -43,6 +43,9 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::put('/stocks/{stock}', [AdminStockController::class, 'update'])->name('stocks.update');
     Route::delete('/stocks/{stock}', [AdminStockController::class, 'destroy'])->name('stocks.destroy');
     Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+    Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
+    Route::patch('/users/{user}/toggle-active', [AdminUserController::class, 'toggleActive'])->name('users.toggle-active');
+    Route::post('/users/{user}/deposit', [AdminUserController::class, 'deposit'])->name('users.deposit');
 });
 
 require __DIR__.'/auth.php';
